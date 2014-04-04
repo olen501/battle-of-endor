@@ -9,19 +9,19 @@ from direct.interval.FunctionInterval import Wait,Func
 from math import *
 from math import pi, sin, cos
 from panda3d.core import Camera
-from panda3d.core import *
+# from panda3d.core import *
 
-from direct.showbase.ShowBase import ShowBase
+# from direct.showbase.ShowBase import ShowBase
 from direct.actor.Actor import Actor
 
 from navigation_system import NavigationSystem
 
-import direct.directbase.DirectStart
+# import direct.directbase.DirectStart
 
 
 class Ship(Actor):
-	def __init__(self, timestep):
-		Actor.__init__(self)
+	def __init__(self, model, timestep):
+		Actor.__init__(self, model)
 
 		self.navSystem = NavigationSystem(timestep)
 		# self.weaponSystem = WeaponSystem()
@@ -30,11 +30,16 @@ class Ship(Actor):
 		self.hitpoints = 100
 		self.shields = 100
 		self.commandLevel = 1
+		self.t = 0
 
-		self.velocity = Vec3()
+	def update(self):
 
-		for i in xrange(100):
-			self.navSystem.goToLocation(self, Vec3(5,0,0))
+		self.navSystem.goToLocation(self, Vec3(10,10,10))
+
+	def goTo(self, loc):
+		self.navSystem.goToLocation(self, loc)
 
 
-s = Ship(1)
+
+
+# s = Ship(1)
