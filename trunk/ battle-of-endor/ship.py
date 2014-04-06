@@ -20,8 +20,10 @@ from navigation_system import NavigationSystem
 
 
 class Ship(Actor):
-	def __init__(self, model, timestep):
+	def __init__(self, model, timestep, name):
 		Actor.__init__(self, model)
+
+		self.name = name
 
 		self.navSystem = NavigationSystem(timestep)
 		# self.weaponSystem = WeaponSystem()
@@ -38,6 +40,11 @@ class Ship(Actor):
 
 	def goTo(self, loc):
 		self.navSystem.goToLocation(self, loc)
+
+	def getName(self):
+		return self.name
+	def setName(self, name):
+		self.name = name
 
 
 
