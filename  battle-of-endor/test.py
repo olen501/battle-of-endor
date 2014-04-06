@@ -26,7 +26,7 @@ class test(ShowBase):
 
 		self.gameTask = taskMgr.add(self.gameLoop, "gameLoop")
 
-		self.ship = Ship("models//ship",0.3)
+		self.ship = Ship("models//ship",0.3, "ship1")
 		self.ship.reparentTo(render)
 		self.ship.setPos(Point3(0,0,0))
 		self.ship.setScale(2)
