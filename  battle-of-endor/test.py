@@ -18,7 +18,7 @@ from direct.actor.Actor import Actor, VBase4, DirectionalLight, PerspectiveLens
 import cPickle, sys
 
 
-from ship import Ship
+from ship import *
 
 class test(ShowBase):
 	def __init__(self):
@@ -26,52 +26,85 @@ class test(ShowBase):
 
 		self.gameTask = taskMgr.add(self.gameLoop, "gameLoop")
 
-		self.ship = Ship("models//ship",0.3, "ship1")
-		self.ship.reparentTo(render)
-		self.ship.setPos(Point3(0,0,0))
-		self.ship.setScale(2)
-
-		self.i = 0
-
 		base.disableMouse()
 		
-		base.camera.setPos(0, -80, 30)
-		base.camera.lookAt(10,10,10)
+		base.camera.setPos(0, -100, 70)
+		base.camera.lookAt(20,0,0)
 
 		slight = Spotlight('slight')
 		slight.setColor(VBase4(1, 1, 1, 1))
 		lens = PerspectiveLens()
 		slight.setLens(lens)
 
-		directionalLight = DirectionalLight('directionalLight')
-		directionalLight.setColor(Vec4(0.8, 0.2, 0.2, 1))
-		self.directionalLightNP = render.attachNewNode(directionalLight)
+		self.shipList = [
+			Xwing("models//ship",0.3, "ship1"),
+			Ywing("models//ship", 0.3, "ship1"),
+			Awing("models//ship", 0.3, "ship1"),
+			Bwing("models//ship", 0.3, "ship1"),
+			TieFighter("models//ship", 0.3, "ship1"),
+			TieInterceptor("models//ship", 0.3, "ship1")]
 
-		# This light is facing backwards, towards the camera.
-		self.directionalLightNP.setHpr(180, -20, 0)
-		render.setLight(self.directionalLightNP)
+		lightColors = [
+			Vec4(0.9, 0.9, 0.9, 1),
+			Vec4(1, 1, 0, 1),
+			Vec4(1, 0, 0, 1),
+			Vec4(0, 0, 1, 1),
+			Vec4(0.4, 0.4, 0.4, 1),
+			Vec4(0.1, 0.1, 0.1, 1)]
+
+		for i, ship in enumerate(self.shipList):
+			ship.reparentTo(render)
+			ship.setScale(2)
+			ship.setPos(Point3(i*10, 0, 0))
+
+			directionalLight = DirectionalLight('directionalLight')
+			directionalLight.setColor(lightColors[i])
+			directionalLightNP = render.attachNewNode(directionalLight)
+
+			directionalLightNP.setHpr(180, -20, 0)
+			ship.setLight(directionalLightNP)
+
+		# self.ship = Xwing("models//ship",0.3, "ship1")
+		# self.ship.reparentTo(render)
+		# self.ship.setPos(Point3(0,0,0))
+		# self.ship.setScale(2)
+
+		# self.ywing = Ywing("models//ship", 0.3, "ship1")
+		# self.ywing.reparentTo(render)
+		# self.ywing.setPos(Point3(10, 10, 10))
+		# self.ywing.setScale(2)
+
+
+		# directionalLight = DirectionalLight('directionalLight')
+		# directionalLight.setColor(Vec4(0.8, 0.2, 0.2, 1))
+		# self.directionalLightNP = render.attachNewNode(directionalLight)
+
+		# # This light is facing backwards, towards the camera.
+		# self.directionalLightNP.setHpr(180, -20, 0)
+		# self.ship.setLight(self.directionalLightNP)
 		self.count = 0
 
 
 	def gameLoop(self, task):
 
-		if self.count < 100:
-			self.ship.goTo(Vec3(10,10,10))
-		elif self.count < 200:
-			self.ship.goTo(Vec3(20,20,00))
-		elif self.count < 300:
-			self.ship.goTo(Vec3(00,00,30))
-		elif self.count < 400:
-			self.ship.goTo(Vec3(0,0,0))
+		for i, ship in enumerate(self.shipList):
+			if self.count < 100:
+				ship.goTo(Vec3(i*10,10,10))
+			elif self.count < 200:
+				ship.goTo(Vec3(i*20,20,00))
+			elif self.count < 300:
+				ship.goTo(Vec3(00,00,i*30))
+			elif self.count < 400:
+				ship.goTo(Vec3(i*10,0,0))
 		
 		if(self.count >= 400):
 			self.count = 0
 		self.count = self.count + 1
 
-		print self.count
+		#print self.count
 
-		self.directionalLightNP.setPos(self.ship.getPos() + Vec3(0,10,10))
-		self.directionalLightNP.lookAt(self.ship.getPos())
+		#self.directionalLightNP.setPos(self.ship.getPos() + Vec3(0,10,10))
+		#self.directionalLightNP.lookAt(self.ship.getPos())
 		return Task.cont
 
 

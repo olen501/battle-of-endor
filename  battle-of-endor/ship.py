@@ -25,7 +25,7 @@ class Ship(Actor):
 
 		self.name = name
 
-		self.navSystem = NavigationSystem(timestep)
+		self.navSystem = NavigationSystem(self, timestep)
 		# self.weaponSystem = WeaponSystem()
 		# self.commandSystem = CommandSystem()
 
@@ -36,10 +36,10 @@ class Ship(Actor):
 
 	def update(self):
 
-		self.navSystem.goToLocation(self, Vec3(10,10,10))
+		self.navSystem.goToLocation(Vec3(10,10,10))
 
 	def goTo(self, loc):
-		self.navSystem.goToLocation(self, loc)
+		self.navSystem.goToLocation(loc)
 
 	def getName(self):
 		return self.name
@@ -47,6 +47,59 @@ class Ship(Actor):
 		self.name = name
 
 
+
+class Xwing(Ship):
+	def __init__(self, *args, **kwargs):
+		super(Xwing, self).__init__(*args, **kwargs)
+		self.hitpoints = 100
+		self.shields = 100
+		self.commandLevel = 1
+		self.t = 0
+
+
+class Ywing(Ship):
+	def __init__(self, *args, **kwargs):
+		super(Ywing, self).__init__(*args, **kwargs)
+		self.hitpoints = 100
+		self.shields = 100
+		self.commandLevel = 1
+		self.t = 0
+
+
+class Awing(Ship):
+	def __init__(self, *args, **kwargs):
+		super(Awing, self).__init__(*args, **kwargs)
+		self.hitpoints = 100
+		self.shields = 100
+		self.commandLevel = 1
+		self.t = 0
+
+
+class Bwing(Ship):
+	def __init__(self, *args, **kwargs):
+		super(Bwing, self).__init__(*args, **kwargs)
+		self.hitpoints = 100
+		self.shields = 100
+		self.commandLevel = 1
+		self.t = 0
+
+
+class TieFighter(Ship):
+	def __init__(self, *args, **kwargs):
+		super(TieFighter, self).__init__(*args, **kwargs)
+		self.hitpoints = 100
+		self.shields = 100
+		self.commandLevel = 1
+		self.t = 0
+
+
+class TieInterceptor(Ship):
+	def __init__(self, *args, **kwargs):
+		super(TieInterceptor, self).__init__(*args, **kwargs)
+		self.hitpoints = 100
+		self.shields = 100
+		self.commandLevel = 1
+		self.t = 0	
 
 
 # s = Ship(1)
