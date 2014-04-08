@@ -21,7 +21,7 @@ from navigation_system import NavigationSystem
 
 class Ship(Actor):
 	def __init__(self, model, timestep, name):
-		Actor.__init__(self, model)
+		super(Ship, self).__init__(model)
 
 		self.name = name
 

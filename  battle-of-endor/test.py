@@ -37,12 +37,12 @@ class test(ShowBase):
 		slight.setLens(lens)
 
 		self.shipList = [
-			Xwing("models//ship",0.3, "ship1"),
-			Ywing("models//ship", 0.3, "ship1"),
-			Awing("models//ship", 0.3, "ship1"),
-			Bwing("models//ship", 0.3, "ship1"),
-			TieFighter("models//ship", 0.3, "ship1"),
-			TieInterceptor("models//ship", 0.3, "ship1")]
+			Xwing("models/ship",0.3, "xwing1"),
+			Ywing("models/ship", 0.3, "ywing1"),
+			Awing("models/ship", 0.3, "awing1"),
+			Bwing("models/ship", 0.3, "bwing1"),
+			TieFighter("models/ship", 0.3, "tiefighter1"),
+			TieInterceptor("models/ship", 0.3, "tieinterceptor1")]
 
 		lightColors = [
 			Vec4(0.9, 0.9, 0.9, 1),
