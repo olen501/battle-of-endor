@@ -64,24 +64,6 @@ class test(ShowBase):
 			directionalLightNP.setHpr(180, -20, 0)
 			ship.setLight(directionalLightNP)
 
-		# self.ship = Xwing("models//ship",0.3, "ship1")
-		# self.ship.reparentTo(render)
-		# self.ship.setPos(Point3(0,0,0))
-		# self.ship.setScale(2)
-
-		# self.ywing = Ywing("models//ship", 0.3, "ship1")
-		# self.ywing.reparentTo(render)
-		# self.ywing.setPos(Point3(10, 10, 10))
-		# self.ywing.setScale(2)
-
-
-		# directionalLight = DirectionalLight('directionalLight')
-		# directionalLight.setColor(Vec4(0.8, 0.2, 0.2, 1))
-		# self.directionalLightNP = render.attachNewNode(directionalLight)
-
-		# # This light is facing backwards, towards the camera.
-		# self.directionalLightNP.setHpr(180, -20, 0)
-		# self.ship.setLight(self.directionalLightNP)
 		self.count = 0
 
 
