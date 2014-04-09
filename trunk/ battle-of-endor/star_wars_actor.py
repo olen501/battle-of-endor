@@ -26,28 +26,39 @@ class StarWarsActor(Actor):
 		self.timestep = timestep
 
 		self.radius = 5
-		self.nearByShips = None
+		self.nearBySwActors = None
 		self.navSystem = NavigationSystem(self, timestep)
 
-	def update(self, nearByShips):
-		self.nearByShips = nearByShips
+		self.detached = False
+
+	def update(self, nearBySwActors):
+		self.nearBySwActors = nearBySwActors
 		self.checkCollision()
 
 	def checkCollision(self):
 		# Check all nearby ships for a collision
-		for ship in self.nearByShips:
+		for swactor in self.nearBySwActors:
+
 			# Calculate distance between two ships
 			diff = Vec3(self.getPos() - 
-				ship.getPos()).length()
+				swactor.getPos()).length()
 
-			minNoCol = self.radius + ship.radius
+			minNoCol = self.radius + swactor.radius
 
 			if(diff < minNoCol):
-				print 'Collision!'
+				swactor.onCollision(self)				
+				self.onCollision(swactor)
+
+	def onCollision(self, swactor):
+		pass
+
+	def destroy(self):
+		self.detachNode()
+		self.detached = True
 
 	def getName(self):
 		return self.name
-
+		
 	def setName(self, name):
 		self.name = name
 
