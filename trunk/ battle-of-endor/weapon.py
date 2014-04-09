@@ -71,4 +71,4 @@ class Laser(StarWarsActor):
 		self.setScale(2)
 		self.setPos(Point3(px, py, pz))
 
-
+		#need to set velocity and heading
