@@ -3,7 +3,6 @@ from weapon import Weapon
 from panda3d.core import Vec3
 
 class WeaponSystem:
-
 	def __init__(self, ship):
 		
 		# Ship weapons - in order to make a unique name so that other ships may
@@ -58,7 +57,7 @@ class WeaponSystem:
 	def run(self, ship, dt):
 
 		nextState = self.currentState
-		target = getTarget()
+		target = self.getTarget()
 
 		if(self.currentState == self.STATE_IDLE):
 			if(target is not None):
@@ -134,4 +133,4 @@ class WeaponSystem:
 
 	# Prototype for firing a message
 	def fireWeapon(self):
-		activeWeapon.fire()	
+		activeWeapon.fire(self.ship, self.target)	

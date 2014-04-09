@@ -34,6 +34,8 @@ class Ship(Actor):
 		self.commandLevel = commandLevel
 		self.t = 0
 
+		self.target = None
+
 	def update(self):
 
 		self.navSystem.goToLocation(Vec3(10,10,10))
@@ -55,6 +57,10 @@ class Xwing(Ship):
 		commandLevel = 1
 		super(Xwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
+		# team is which side you are on. 0 is rebels, 1 is empire
+		self.team = 0
+
+
 
 class Ywing(Ship):
 	def __init__(self, model, timestep, name):
@@ -62,6 +68,9 @@ class Ywing(Ship):
 		shields = 100
 		commandLevel = 1
 		super(Ywing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+
+		# team is which side you are on. 0 is rebels, 1 is empire
+		self.team = 0
 
 
 class Awing(Ship):
@@ -71,6 +80,9 @@ class Awing(Ship):
 		commandLevel = 1
 		super(Awing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
+		# team is which side you are on. 0 is rebels, 1 is empire
+		self.team = 0
+
 
 class Bwing(Ship):
 	def __init__(self, model, timestep, name):
@@ -78,6 +90,9 @@ class Bwing(Ship):
 		shields = 100
 		commandLevel = 1
 		super(Bwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+
+		# team is which side you are on. 0 is rebels, 1 is empire
+		self.team = 0
 
 
 class TieFighter(Ship):
@@ -87,6 +102,9 @@ class TieFighter(Ship):
 		commandLevel = 1
 		super(TieFighter, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
+		# team is which side you are on. 0 is rebels, 1 is empire
+		self.team = 1
+
 
 class TieInterceptor(Ship):
 	def __init__(self, model, timestep, name):
@@ -94,6 +112,9 @@ class TieInterceptor(Ship):
 		shields = 100
 		commandLevel = 1
 		super(TieInterceptor, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)	
+
+		# team is which side you are on. 0 is rebels, 1 is empire
+		self.team = 1
 
 
 # s = Ship(1)
