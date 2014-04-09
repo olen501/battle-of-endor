@@ -10,6 +10,8 @@ from panda3d.core import Spotlight
 from direct.showbase.ShowBase import ShowBase
 from direct.actor.Actor import Actor, VBase4, DirectionalLight, PerspectiveLens
 
+from math import sqrt
+
 from star_wars_actor import StarWarsActor
 
 
@@ -27,7 +29,10 @@ class Weapon():
 	# Construct a message that this weapon was fired. Likely called from the
 	# weapon system, with the message passed on somehow.
 	def fire(self, parent, target):
-		laser = Laser(parent, target, self.damage, self.range)
+		laser = Laser(parent, target, self.name + str(len(self.shotList)), self.damage, self.range)
+
+		# this is going to give us a bunch of dead objects, need to remove them when laser hits
+		# target or reaches max range!
 		self.shotList.append(laser)
 
 	def getName(self):
@@ -52,34 +57,62 @@ class Weapon():
 
 
 class Laser(StarWarsActor):
-	def __init__(self, parent, target, damage, range):
-		super(Laser, self).__init__("models/beam", 0.3, "laser")
+	def __init__(self, parent, target, name, damage, range):
+		super(Laser, self).__init__("models/beamred", 0.3, "laser")
 		self.parent = parent
 		self.target = target
+		self.name = name
 		self.damage = damage
 		self.range = range
-		self.speed = 10
-
-		px = self.parent.center.getX() 
-		py = self.parent.center.getY() 
-		pz = self.parent.center.getZ()
+		
+		self.speed = 70
+		self.startPos = self.parent.getPos()
+		# px = self.parent.center.getX()
+		# py = self.parent.center.getY()
+		# pz = self.parent.center.getZ()
 		# tx = self.target.getX()
 		# ty = self.target.getY()
 		# tz = self.target.getZ()
 
 		self.reparentTo(render)
-		self.setScale(2)
-		self.setPos(Point3(px, py, pz))
+		self.setScale(1)
+		#self.setPos(Point3(px, py, pz))
+		self.setPos(self.startPos)
 
 		#need to set velocity and heading
 		self.setHeading(self.parent.getHeading())
 		self.setVelocity((self.parent.getHeading() * self.speed) + self.parent.getVelocity())
 
+		# add the task of updating to the taskMgr
+		self.tsk = taskMgr.add(self.update, self.name)
+
+################## Take all of this out, this is just so I could see the laser during testing!!! ################
+		directionalLight = DirectionalLight('directionalLight')
+		directionalLight.setColor(Vec4(1, 0, 0, 1))
+		directionalLightNP = render.attachNewNode(directionalLight)
+
+		directionalLightNP.setHpr(180, -20, 0)
+		self.setLight(directionalLightNP)
+
+
 	def onCollision(self, swactor):
 		pass
 
+	def getDistance(self, x0, x1):
+		return sqrt((x1.getX() - x0.getX())**2 + (x1.getY() - x0.getY())**2 + (x1.getZ() - x0.getZ())**2)
+
 	def update(self, task):
-		dt = task.time - task.last  #obtains the time since that last frame.
-		task.last = task.time
-		
+		dt = task.time  #this is the elapsed time since the first call of this function
+		#dt = task.time - task.last  #obtains the time since that last frame.
+		#task.last = task.time
+
+		pos = self.startPos + self.getVelocity()*dt
+		self.setPos(pos)
+
+		distance = self.getDistance(self.startPos, pos)
+		#print "%f, %f"%(dt, distance)
+		if distance >= self.range:
+			taskMgr.remove(self.tsk)
+			self.destroy()
+
 		return task.cont
