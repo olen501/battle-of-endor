@@ -43,7 +43,8 @@ class NavigationSystem(object):
 		accel = self.accControl.run(error)
 
 		# Calculate the new position and update ships position
-		self.velocity = self.velocity + accel * self.timestep;
+		self.velocity = self.velocity + accel * self.timestep
+		self.heading = self.velocity / self.velocity.length()
 
 		self.position = self.position*self.timestep + accel*self.timestep*self.timestep/2
 		self.swactor.setPos(self.position)

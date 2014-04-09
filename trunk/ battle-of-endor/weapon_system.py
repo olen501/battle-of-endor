@@ -13,11 +13,11 @@ class WeaponSystem:
 		# Close range weapon
 		self.weaponCloseRange = Weapon(name = ship.getName()+'-wClose',
 									   damage = 10,
-									   range = 5)
+									   range = 50)
 		# Long range weapon
 		self.weaponLongRange  = Weapon(name = ship.getName()+'-wLong',
 									   damage = 5,
-									   range = 10)
+									   range = 100)
 
 		# Time required to switch from one weapon to another. Don't know if we
 		# want/need this, but felt it might be good to have the framework for
@@ -133,4 +133,4 @@ class WeaponSystem:
 
 	# Prototype for firing a message
 	def fireWeapon(self):
-		activeWeapon.fire(self.ship, self.target)	
+		self.activeWeapon.fire(self.ship, self.target)	

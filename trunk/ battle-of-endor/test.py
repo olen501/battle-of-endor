@@ -27,8 +27,8 @@ class test(ShowBase):
 
 		base.disableMouse()
 		
-		base.camera.setPos(0, -100, 70)
-		base.camera.lookAt(20,0,0)
+		base.camera.setPos(0, -300, 100)
+		base.camera.lookAt(0,0,0)
 
 		slight = Spotlight('slight')
 		slight.setColor(VBase4(1, 1, 1, 1))
@@ -36,12 +36,12 @@ class test(ShowBase):
 		slight.setLens(lens)
 
 		self.shipList = [
-			Xwing("models/ship",0.3, "xwing1"),
-			Ywing("models/ship", 0.3, "ywing1"),
-			Awing("models/ship", 0.3, "awing1"),
-			Bwing("models/ship", 0.3, "bwing1"),
-			TieFighter("models/ship", 0.3, "tiefighter1"),
-			TieInterceptor("models/ship", 0.3, "tieinterceptor1")]
+			Xwing("models/ship",0.3, "xwing1")]
+			# Ywing("models/ship", 0.3, "ywing1"),
+			# Awing("models/ship", 0.3, "awing1"),
+			# Bwing("models/ship", 0.3, "bwing1"),
+			# TieFighter("models/ship", 0.3, "tiefighter1"),
+			# TieInterceptor("models/ship", 0.3, "tieinterceptor1")]
 
 		lightColors = [
 			Vec4(0.9, 0.9, 0.9, 1),
@@ -65,16 +65,23 @@ class test(ShowBase):
 
 		self.count = 0
 
+		self.fire = False
+
 
 	def gameLoop(self, task):
 
 		for i, ship in enumerate(self.shipList):
+			j = i if i % 2 == 0 else -i
+
 			if self.count < 100:
-				ship.goTo(Vec3(i*10,10,10))
+				ship.goTo(Vec3(j*10,10,10))
+				if not self.fire:
+					ship.weaponSystem.fireWeapon()
+					self.fire = True
 			elif self.count < 200:
-				ship.goTo(Vec3(i*20,20,00))
+				ship.goTo(Vec3(j*20,20,00))
 			elif self.count < 300:
-				ship.goTo(Vec3(00,00,i*30))
+				ship.goTo(Vec3(00,00,j*30))
 			elif self.count < 400:
 				ship.goTo(Vec3(i*10,0,0))
 		
