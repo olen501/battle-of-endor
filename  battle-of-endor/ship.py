@@ -33,8 +33,6 @@ class Ship(StarWarsActor):
 		self.shields = shields
 		self.commandLevel = commandLevel
 		self.t = 0
-
-		self.radius = .05
 		self.nearByShips = None
 
 		self.target = None
@@ -42,7 +40,8 @@ class Ship(StarWarsActor):
 	def goTo(self, loc):
 		self.navSystem.goToLocation(loc)
 
-
+	def onCollision(self, swActor):
+		self.destroy()
 
 class Xwing(Ship):
 	def __init__(self, model, timestep, name):
