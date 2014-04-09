@@ -58,6 +58,11 @@ class StarWarsActor(Actor):
 		return self.navSystem.getPos()
 
 	def setHeading(self, heading):
-		navSystem.setHeading(heading)
+		self.navSystem.setHeading(heading)
 	def getHeading(self):
-		navSystem.getHeading() 
+		return self.navSystem.getHeading()
+
+	def setVelocity(self, vel):
+		self.navSystem.setVelocity(vel)
+	def getVelocity(self):
+		return self.navSystem.getVelocity()
