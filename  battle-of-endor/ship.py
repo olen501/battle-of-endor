@@ -15,6 +15,7 @@ from panda3d.core import Camera
 from direct.actor.Actor import Actor
 
 from navigation_system import NavigationSystem
+from weapon_system import WeaponSystem
 
 # import direct.directbase.DirectStart
 
@@ -26,7 +27,7 @@ class Ship(Actor):
 		self.name = name
 
 		self.navSystem = NavigationSystem(self, timestep)
-		# self.weaponSystem = WeaponSystem()
+		self.weaponSystem = WeaponSystem(self)
 		# self.commandSystem = CommandSystem()
 
 		self.hitpoints = hitpoints
