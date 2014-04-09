@@ -38,10 +38,6 @@ class Ship(StarWarsActor):
 
 		self.target = None
 
-	def update(self):
-
-
-
 	def goTo(self, loc):
 		self.navSystem.goToLocation(loc)
 
