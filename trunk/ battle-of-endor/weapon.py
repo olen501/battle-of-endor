@@ -9,7 +9,7 @@ class Weapon():
 
 	# Construct a message that this weapon was fired. Likely called from the
 	# weapon system, with the message passed on somehow.
-	def fire():
+	def fire(self, parent, target):
 		pass
 
 	def getName(self):
@@ -31,3 +31,9 @@ class Weapon():
 		return self.cooldown
 	def setCooldown(self, cooldown):
 		self.cooldown = cooldown1
+
+
+class Laser():
+	def __init__(self, parent, target):
+		self.parent = parent
+		self.target = target
