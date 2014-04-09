@@ -75,3 +75,13 @@ class NavigationSystem(object):
 		return self.position
 	def setPosition(self, pos):
 		self.position = pos
+
+	def getVelocity(self):
+		return self.velocity
+	def setVelocity(self, vel):
+		self.velocity = vel
+
+	def getHeading(self):
+		return self.heading
+	def setHeading(self, heading):
+		self.heading = heading
