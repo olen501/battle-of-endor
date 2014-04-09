@@ -20,7 +20,7 @@ from navigation_system import NavigationSystem
 
 
 class Ship(Actor):
-	def __init__(self, model, timestep, name):
+	def __init__(self, model, timestep, name, hitpoints, shields, commandLevel):
 		super(Ship, self).__init__(model)
 
 		self.name = name
@@ -29,9 +29,9 @@ class Ship(Actor):
 		# self.weaponSystem = WeaponSystem()
 		# self.commandSystem = CommandSystem()
 
-		self.hitpoints = 100
-		self.shields = 100
-		self.commandLevel = 1
+		self.hitpoints = hitpoints
+		self.shields = shields
+		self.commandLevel = commandLevel
 		self.t = 0
 
 	def update(self):
@@ -49,57 +49,51 @@ class Ship(Actor):
 
 
 class Xwing(Ship):
-	def __init__(self, *args, **kwargs):
-		super(Xwing, self).__init__(*args, **kwargs)
-		self.hitpoints = 100
-		self.shields = 100
-		self.commandLevel = 1
-		self.t = 0
+	def __init__(self, model, timestep, name):
+		hitpoints = 100
+		shields = 100
+		commandLevel = 1
+		super(Xwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
 
 class Ywing(Ship):
-	def __init__(self, *args, **kwargs):
-		super(Ywing, self).__init__(*args, **kwargs)
-		self.hitpoints = 100
-		self.shields = 100
-		self.commandLevel = 1
-		self.t = 0
+	def __init__(self, model, timestep, name):
+		hitpoints = 100
+		shields = 100
+		commandLevel = 1
+		super(Ywing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
 
 class Awing(Ship):
-	def __init__(self, *args, **kwargs):
-		super(Awing, self).__init__(*args, **kwargs)
-		self.hitpoints = 100
-		self.shields = 100
-		self.commandLevel = 1
-		self.t = 0
+	def __init__(self, model, timestep, name):
+		hitpoints = 100
+		shields = 100
+		commandLevel = 1
+		super(Awing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
 
 class Bwing(Ship):
-	def __init__(self, *args, **kwargs):
-		super(Bwing, self).__init__(*args, **kwargs)
-		self.hitpoints = 100
-		self.shields = 100
-		self.commandLevel = 1
-		self.t = 0
+	def __init__(self, model, timestep, name):
+		hitpoints = 100
+		shields = 100
+		commandLevel = 1
+		super(Bwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
 
 class TieFighter(Ship):
-	def __init__(self, *args, **kwargs):
-		super(TieFighter, self).__init__(*args, **kwargs)
-		self.hitpoints = 100
-		self.shields = 100
-		self.commandLevel = 1
-		self.t = 0
+	def __init__(self, model, timestep, name):
+		hitpoints = 100
+		shields = 100
+		commandLevel = 1
+		super(TieFighter, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
 
 class TieInterceptor(Ship):
-	def __init__(self, *args, **kwargs):
-		super(TieInterceptor, self).__init__(*args, **kwargs)
-		self.hitpoints = 100
-		self.shields = 100
-		self.commandLevel = 1
-		self.t = 0	
+	def __init__(self, model, timestep, name):
+		hitpoints = 100
+		shields = 100
+		commandLevel = 1
+		super(TieInterceptor, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)	
 
 
 # s = Ship(1)
