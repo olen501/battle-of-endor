@@ -63,12 +63,23 @@ class Laser(StarWarsActor):
 		px = self.parent.center.getX() 
 		py = self.parent.center.getY() 
 		pz = self.parent.center.getZ()
-		tx = self.target.getX()
-		ty = self.target.getY()
-		tz = self.target.getZ()
+		# tx = self.target.getX()
+		# ty = self.target.getY()
+		# tz = self.target.getZ()
 
 		self.reparentTo(render)
 		self.setScale(2)
 		self.setPos(Point3(px, py, pz))
 
 		#need to set velocity and heading
+		self.setHeading(self.parent.getHeading())
+		self.setVelocity((self.parent.getHeading() * self.speed) + self.parent.getVelocity())
+
+	def onCollision(self, swactor):
+		pass
+
+	def update(self, task):
+		dt = task.time - task.last  #obtains the time since that last frame.
+		task.last = task.time
+		
+		return task.cont
