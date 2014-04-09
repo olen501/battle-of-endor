@@ -14,19 +14,17 @@ from panda3d.core import Camera
 # from direct.showbase.ShowBase import ShowBase
 from direct.actor.Actor import Actor
 
-from navigation_system import NavigationSystem
+from star_wars_actor import StarWarsActor
 from weapon_system import WeaponSystem
 
 # import direct.directbase.DirectStart
 
 
-class Ship(Actor):
+class Ship(StarWarsActor):
 	def __init__(self, model, timestep, name, hitpoints, shields, commandLevel):
-		super(Ship, self).__init__(model)
+		super(Ship, self).__init__(model, timestep, name)
 
-		self.name = name
-
-		self.navSystem = NavigationSystem(self, timestep)
+		
 		self.weaponSystem = WeaponSystem(self)
 		# self.commandSystem = CommandSystem()
 
@@ -35,20 +33,19 @@ class Ship(Actor):
 		self.commandLevel = commandLevel
 		self.t = 0
 
+<<<<<<< .mine
+		self.radius = .05
+		self.nearByShips = None
+=======
 		self.target = None
 
 	def update(self):
+>>>>>>> .r15
 
-		self.navSystem.goToLocation(Vec3(10,10,10))
+
 
 	def goTo(self, loc):
 		self.navSystem.goToLocation(loc)
-
-	def getName(self):
-		return self.name
-	def setName(self, name):
-		self.name = name
-
 
 
 class Xwing(Ship):

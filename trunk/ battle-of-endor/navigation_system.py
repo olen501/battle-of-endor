@@ -71,3 +71,7 @@ class NavigationSystem(object):
 	def findNearbyShips(self):
 		pass
 		
+	def getPosition(self):
+		return self.position
+	def setPosition(self, pos):
+		self.position = pos
