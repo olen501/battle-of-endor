@@ -33,14 +33,12 @@ class Ship(StarWarsActor):
 		self.commandLevel = commandLevel
 		self.t = 0
 
-<<<<<<< .mine
 		self.radius = .05
 		self.nearByShips = None
-=======
+
 		self.target = None
 
 	def update(self):
->>>>>>> .r15
 
 
 
