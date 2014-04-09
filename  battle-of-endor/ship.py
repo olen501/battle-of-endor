@@ -16,6 +16,7 @@ from direct.actor.Actor import Actor
 
 from star_wars_actor import StarWarsActor
 from weapon_system import WeaponSystem
+from navigation_system import NavigationSystem
 
 # import direct.directbase.DirectStart
 
@@ -40,6 +41,7 @@ class Ship(StarWarsActor):
 
 	def goTo(self, loc):
 		self.navSystem.goToLocation(loc)
+
 
 
 class Xwing(Ship):

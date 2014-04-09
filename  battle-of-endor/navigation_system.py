@@ -18,9 +18,9 @@ from direct.actor.Actor import Actor
 # from navigation_system import NavigationSystem
 
 class NavigationSystem(object):
-	def __init__(self, ship, timestep):
+	def __init__(self, swactor, timestep):
 
-		self.ship = ship
+		self.swactor = swactor
 		self.timestep = timestep
 
 		self.position = Vec3()
@@ -31,12 +31,12 @@ class NavigationSystem(object):
 		self.errorOld = Vec3()
 		self.integralErr = Vec3()
 
-		# PID controller for the ship acceleration
+		# PID controller for the swactor acceleration
 		self.accControl = PID(0.2, 0.1, 0.1)
 				
 	def goToLocation(self, loc):
 
-		curLoc = self.ship.getPos()
+		curLoc = self.swactor.getPos()
 		error = loc - curLoc
 
 		# Run the PID controller for the acceleration
@@ -46,7 +46,7 @@ class NavigationSystem(object):
 		self.velocity = self.velocity + accel * self.timestep;
 
 		self.position = self.position*self.timestep + accel*self.timestep*self.timestep/2
-		self.ship.setPos(self.position)
+		self.swactor.setPos(self.position)
 
 		# Store error
 		self.errorOld = error
@@ -71,9 +71,9 @@ class NavigationSystem(object):
 	def findNearbyShips(self):
 		pass
 		
-	def getPosition(self):
+	def getPos(self):
 		return self.position
-	def setPosition(self, pos):
+	def setPos(self, pos):
 		self.position = pos
 
 	def getVelocity(self):

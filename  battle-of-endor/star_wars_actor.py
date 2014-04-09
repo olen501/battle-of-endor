@@ -25,10 +25,8 @@ class StarWarsActor(Actor):
 		self.name = name
 		self.timestep = timestep
 
-		self.radius = 0.05
-
+		self.radius = 5
 		self.nearByShips = None
-
 		self.navSystem = NavigationSystem(self, timestep)
 
 	def update(self, nearByShips):
@@ -39,18 +37,13 @@ class StarWarsActor(Actor):
 		# Check all nearby ships for a collision
 		for ship in self.nearByShips:
 			# Calculate distance between two ships
-			diff = Vec3(self.navSystem.getPosition() - 
-				ship.navSystem.getPosition())
-			print self.name, self.navSystem.getPosition(), \
-				  ship.name, ship.navSystem.getPosition(), \
-				  diff
+			diff = Vec3(self.getPos() - 
+				ship.getPos()).length()
+
 			minNoCol = self.radius + ship.radius
 
-			# if(diff < minNoCol):
-				# print 'Collision!'
-
-	def checkCollision(self):
-		pass
+			if(diff < minNoCol):
+				print 'Collision!'
 
 	def getName(self):
 		return self.name
@@ -58,7 +51,13 @@ class StarWarsActor(Actor):
 	def setName(self, name):
 		self.name = name
 
-	def setPosition(self, pos):
-		super(Ship, self).setPosition(pos)
-		print 'here'
-		navSystem.setPosition(pos)
+	def setPos(self, pos):
+		super(StarWarsActor, self).setPos(pos)
+		self.navSystem.setPos(pos)
+	def getPos(self):
+		return self.navSystem.getPos()
+
+	def setHeading(self, heading):
+		navSystem.setHeading(heading)
+	def getHeading(self):
+		navSystem.getHeading() 
