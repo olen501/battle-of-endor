@@ -6,7 +6,6 @@ from math import sin, cos, pi
 from random import randint, choice, random
 from direct.interval.MetaInterval import Sequence
 from direct.interval.FunctionInterval import Wait,Func
-from math import *
 from math import pi, sin, cos
 from panda3d.core import Camera
 from panda3d.core import Spotlight
