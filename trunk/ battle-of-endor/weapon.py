@@ -1,4 +1,14 @@
+from panda3d.core import TextNode
+from panda3d.core import Point2,Point3,Vec3,Vec4
+from direct.gui.OnscreenText import OnscreenText
+from direct.task.Task import Task
+from direct.interval.MetaInterval import Sequence
+from direct.interval.FunctionInterval import Wait,Func
+from panda3d.core import Camera
+from panda3d.core import Spotlight
 
+from direct.showbase.ShowBase import ShowBase
+from direct.actor.Actor import Actor, VBase4, DirectionalLight, PerspectiveLens
 
 from star_wars_actor import StarWarsActor
 
@@ -17,7 +27,7 @@ class Weapon():
 	# Construct a message that this weapon was fired. Likely called from the
 	# weapon system, with the message passed on somehow.
 	def fire(self, parent, target):
-		laser = Laser(parent, target, self.damage)
+		laser = Laser(parent, target, self.damage, self.range)
 		self.shotList.append(laser)
 
 	def getName(self):
@@ -42,10 +52,13 @@ class Weapon():
 
 
 class Laser(StarWarsActor):
-	def __init__(self, parent, target, damage):
+	def __init__(self, parent, target, damage, range):
+		super(Laser, self).__init__("models/beam", 0.3, "laser")
 		self.parent = parent
 		self.target = target
 		self.damage = damage
+		self.range = range
+		self.speed = 10
 
 		px = self.parent.center.getX() 
 		py = self.parent.center.getY() 
@@ -53,5 +66,9 @@ class Laser(StarWarsActor):
 		tx = self.target.getX()
 		ty = self.target.getY()
 		tz = self.target.getZ()
+
+		self.reparentTo(render)
+		self.setScale(2)
+		self.setPos(Point3(px, py, pz))
 
 
