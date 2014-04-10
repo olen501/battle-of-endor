@@ -113,8 +113,9 @@ class Laser(StarWarsActor):
 		pos = self.startPos + self.getVelocity()*dt
 		self.setPos(pos)
 
+		self.checkCollision()
+
 		distance = self.getDistance(self.startPos, pos)
-		#print "%f, %f"%(dt, distance)
 		if distance >= self.range:
 			taskMgr.remove(self.tsk)
 			self.callback(self)

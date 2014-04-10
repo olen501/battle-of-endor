@@ -26,7 +26,7 @@ class StarWarsActor(Actor):
 		self.timestep = timestep
 
 		self.radius = 5
-		self.nearBySwActors = None
+		self.nearBySwActors = []
 		self.navSystem = NavigationSystem(self, timestep)
 
 		self.detached = False
