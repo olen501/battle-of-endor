@@ -98,9 +98,14 @@ class Laser(StarWarsActor):
 		directionalLightNP.setHpr(180, -20, 0)
 		self.setLight(directionalLightNP)
 
+	def remove(self):
+		taskMgr.remove(self.tsk)
+		self.callback(self)
+		self.destroy()		
 
 	def onCollision(self, swactor):
-		pass
+		# need to check to make sure it's not another laser
+		self.remove()
 
 	def getDistance(self, x0, x1):
 		return sqrt((x1.getX() - x0.getX())**2 + (x1.getY() - x0.getY())**2 + (x1.getZ() - x0.getZ())**2)
@@ -113,12 +118,10 @@ class Laser(StarWarsActor):
 		pos = self.startPos + self.getVelocity()*dt
 		self.setPos(pos)
 
-		self.checkCollision()
-
 		distance = self.getDistance(self.startPos, pos)
 		if distance >= self.range:
-			taskMgr.remove(self.tsk)
-			self.callback(self)
-			self.destroy()
+			self.remove()
+		else:
+			self.checkCollision()
 
 		return task.cont
