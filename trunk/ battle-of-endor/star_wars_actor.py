@@ -31,7 +31,12 @@ class StarWarsActor(Actor):
 
 		self.detached = False
 
-	def update(self, nearBySwActors):
+		self.sight = 100
+
+		self.dt = 0
+
+	def update(self, dt, nearBySwActors):
+		self.dt = dt
 		self.nearBySwActors = nearBySwActors
 		self.checkCollision()
 
@@ -77,3 +82,8 @@ class StarWarsActor(Actor):
 		self.navSystem.setVelocity(vel)
 	def getVelocity(self):
 		return self.navSystem.getVelocity()
+
+	def setSight(self, sight):
+		self.sight = sight
+	def getSight(self):
+		return self.sight
