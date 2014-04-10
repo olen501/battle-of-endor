@@ -29,10 +29,7 @@ class Weapon():
 	# Construct a message that this weapon was fired. Likely called from the
 	# weapon system, with the message passed on somehow.
 	def fire(self, parent, target):
-		laser = Laser(parent, target, self.name + str(len(self.shotList)), self.damage, self.range)
-
-		# this is going to give us a bunch of dead objects, need to remove them when laser hits
-		# target or reaches max range!
+		laser = Laser(parent, target, self.name + str(len(self.shotList)), self.damage, self.range, self.removeShot)
 		self.shotList.append(laser)
 
 	def getName(self):
@@ -55,15 +52,22 @@ class Weapon():
 	def setCooldown(self, cooldown):
 		self.cooldown = cooldown1
 
+	def removeShot(self, shot):
+		try:
+			self.shotList.remove(shot)
+		except (ValueError, AttributeError):
+			pass
+
 
 class Laser(StarWarsActor):
-	def __init__(self, parent, target, name, damage, range):
+	def __init__(self, parent, target, name, damage, range, callback):
 		super(Laser, self).__init__("models/beamred", 0.3, "laser")
 		self.parent = parent
 		self.target = target
 		self.name = name
 		self.damage = damage
 		self.range = range
+		self.callback = callback
 		
 		self.speed = 70
 		self.startPos = self.parent.getPos()
@@ -113,6 +117,7 @@ class Laser(StarWarsActor):
 		#print "%f, %f"%(dt, distance)
 		if distance >= self.range:
 			taskMgr.remove(self.tsk)
+			self.callback(self)
 			self.destroy()
 
 		return task.cont
