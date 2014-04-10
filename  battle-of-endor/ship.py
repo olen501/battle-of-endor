@@ -53,8 +53,6 @@ class Xwing(Ship):
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
 
-
-
 class Ywing(Ship):
 	def __init__(self, model, timestep, name):
 		hitpoints = 100
