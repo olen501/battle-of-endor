@@ -103,9 +103,18 @@ class Laser(StarWarsActor):
 		self.callback(self)
 		self.destroy()		
 
-	def onCollision(self, swactor):
-		# need to check to make sure it's not another laser
-		self.remove()
+	# def onCollision(self, swActor):
+	# 	# ignore other lasers
+	# 	#if not isinstance(swActor, Laser):
+
+	# 	# There's a potential problem with this. Since the collision detection calls both
+	# 	# swactor's onCollision functions, we could get duplicated damage. We need to make
+	# 	# sure that they don't both take off damage. Probably we should have the opposite
+	# 	# of this line in the ship's onCollision. Check if the swactor is a laser, and if
+	# 	# it is, don't do anything
+	# 	if (str(type(swActor)).split()[1].split('.')[0].strip("'") == 'ship'):
+	# 		swActor.hitpoints = swActor.hitpoints - (self.damage * swActor.shields)
+	# 		self.remove()
 
 	def getDistance(self, x0, x1):
 		return sqrt((x1.getX() - x0.getX())**2 + (x1.getY() - x0.getY())**2 + (x1.getZ() - x0.getZ())**2)
@@ -121,7 +130,7 @@ class Laser(StarWarsActor):
 		distance = self.getDistance(self.startPos, pos)
 		if distance >= self.range:
 			self.remove()
-		else:
-			self.checkCollision()
+		# else:
+		# 	self.checkCollision()
 
 		return task.cont

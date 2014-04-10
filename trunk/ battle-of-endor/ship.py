@@ -30,7 +30,7 @@ class Ship(StarWarsActor):
 		# self.commandSystem = CommandSystem()
 
 		self.hitpoints = hitpoints
-		self.shields = shields
+		self.shields = shields  # this is a percentage of how much damage gets through (1.0 is 100% of damage)
 		self.commandLevel = commandLevel
 		self.t = 0
 		self.nearByShips = None
@@ -41,12 +41,19 @@ class Ship(StarWarsActor):
 		self.navSystem.goToLocation(loc)
 
 	def onCollision(self, swActor):
-		self.destroy()
+		if isinstance(swActor, Ship):
+			self.destroy()
+		else:
+			self.hitpoints = self.hitpoints - (swActor.damage * self.shields)
+			swActor.remove()
+			if self.hitpoints <= 0:
+				self.destroy()
+
 
 class Xwing(Ship):
 	def __init__(self, model, timestep, name):
-		hitpoints = 100
-		shields = 100
+		hitpoints = 200.0
+		shields = 0.5
 		commandLevel = 1
 		super(Xwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
@@ -55,8 +62,8 @@ class Xwing(Ship):
 
 class Ywing(Ship):
 	def __init__(self, model, timestep, name):
-		hitpoints = 100
-		shields = 100
+		hitpoints = 300.0
+		shields = 0.5
 		commandLevel = 1
 		super(Ywing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
@@ -66,8 +73,8 @@ class Ywing(Ship):
 
 class Awing(Ship):
 	def __init__(self, model, timestep, name):
-		hitpoints = 100
-		shields = 100
+		hitpoints = 100.0
+		shields = 1.0
 		commandLevel = 1
 		super(Awing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
@@ -77,8 +84,8 @@ class Awing(Ship):
 
 class Bwing(Ship):
 	def __init__(self, model, timestep, name):
-		hitpoints = 100
-		shields = 100
+		hitpoints = 300.0
+		shields = 0.5
 		commandLevel = 1
 		super(Bwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
@@ -88,8 +95,8 @@ class Bwing(Ship):
 
 class TieFighter(Ship):
 	def __init__(self, model, timestep, name):
-		hitpoints = 100
-		shields = 100
+		hitpoints = 100.0
+		shields = 1.0
 		commandLevel = 1
 		super(TieFighter, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 
@@ -99,8 +106,8 @@ class TieFighter(Ship):
 
 class TieInterceptor(Ship):
 	def __init__(self, model, timestep, name):
-		hitpoints = 100
-		shields = 100
+		hitpoints = 100.0
+		shields = 1.0
 		commandLevel = 1
 		super(TieInterceptor, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)	
 
