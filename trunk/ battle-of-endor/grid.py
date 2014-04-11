@@ -26,4 +26,5 @@ class GridSpace
 		coor.append(x,x1,y,y1,z,z1);
 		return coor
 
-	
+	def getShips(self):
+		return objects
