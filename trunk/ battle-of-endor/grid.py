@@ -1,13 +1,14 @@
 from star_wars_actor import * star_wars_actor
 
 class GridSpace
-	def __init__(self, x, x1, y, y1, z,z1):
+	def __init__(self, x, x1, y, y1, z,z1,id):
 		self.x = x
 		self.x1 = x1
 		self.y = y
 		self.y1 = y1
 		self.z = z
 		self.z1 = z1
+		self.id = None 
 		self.objects = []
 
 	def addShip(self,star_wars_actor):
