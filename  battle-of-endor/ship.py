@@ -35,7 +35,7 @@ class Ship(StarWarsActor):
 		# self.commandSystem = CommandSystem()
 
 		self.hitpoints = hitpoints
-		self.shields = shields  # this is a percentage of how much damage gets through (1.0 is 100% of damage)
+		self.shields = shields
 		self.commandLevel = commandLevel
 		self.t = 0
 		self.nearByShips = None
@@ -50,7 +50,7 @@ class Ship(StarWarsActor):
 		if (swActor.type == 'ship'):
 			self.destroy()
 		else:
-			self.hitpoints = self.hitpoints - (swActor.damage * self.shields)
+			self.hitpoints = self.hitpoints - (swActor.damage * (1.0 - self.shields))
 			if self.hitpoints <= 0:
 				self.destroy()
 
@@ -90,7 +90,7 @@ class Ywing(Ship):
 class Awing(Ship):
 	def __init__(self, name):
 		hitpoints = 100.0
-		shields = 1.0
+		shields = 0.0
 		commandLevel = 1
 		model = "models/ship"
 		timestep = 0.3
@@ -122,7 +122,7 @@ class Bwing(Ship):
 class TieFighter(Ship):
 	def __init__(self, name):
 		hitpoints = 100.0
-		shields = 1.0
+		shields = 0.0
 		commandLevel = 1
 		model = "models/tie"
 		timestep = 0.3
@@ -138,14 +138,14 @@ class TieFighter(Ship):
 class TieInterceptor(Ship):
 	def __init__(self, name):
 		hitpoints = 100.0
-		shields = 1.0
+		shields = 0.0
 		commandLevel = 1
 		model = "models/ship"
 		timestep = 0.3
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 1
-		
+
 		super(TieInterceptor, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 		self.setScale(2)	
 
