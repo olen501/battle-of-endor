@@ -25,11 +25,17 @@ class Weapon():
 		# this is a list of references to all laser objects that have been fired
 		self.shotList = []
 
+		# for testing only!!!!
+		self.hasFired = False
+
 	# Construct a message that this weapon was fired. Likely called from the
 	# weapon system, with the message passed on somehow.
 	def fire(self, parent, target):
-		laser = self.weaponType(parent, target, self.name + str(len(self.shotList)), self.removeShot)
-		self.shotList.append(laser)
+		# for testing only!!!!!!
+		if not self.hasFired:
+			laser = self.weaponType(parent, target, self.name + str(len(self.shotList)), self.removeShot)
+			self.shotList.append(laser)
+			self.hasFired = True
 
 	def getName(self):
 		return self.name
@@ -123,7 +129,7 @@ class Laser(StarWarsActor):
 
 class RedLaserLong(Laser):
 	def __init__(self, parent, target, name, callback):
-		model = "models/beamred"
+		model = "models/beam"
 		timestep = 0.3
 		damage = 5
 		wrange = 100
@@ -133,6 +139,60 @@ class RedLaserLong(Laser):
 	################## Take all of this out, this is just so I could see the laser during testing!!! ################
 		directionalLight = DirectionalLight('directionalLight')
 		directionalLight.setColor(Vec4(1, 0, 0, 1))
+		directionalLightNP = render.attachNewNode(directionalLight)
+
+		directionalLightNP.setHpr(180, -20, 0)
+		self.setLight(directionalLightNP)
+
+
+class RedLaserShort(Laser):
+	def __init__(self, parent, target, name, callback):
+		model = "models/beam"
+		timestep = 0.3
+		damage = 10
+		wrange = 50
+		speed = 70
+		super(RedLaserShort, self).__init__(model, timestep, parent, target, name, damage, wrange, speed, callback)
+
+	################## Take all of this out, this is just so I could see the laser during testing!!! ################
+		directionalLight = DirectionalLight('directionalLight')
+		directionalLight.setColor(Vec4(1, 0, 0, 1))
+		directionalLightNP = render.attachNewNode(directionalLight)
+
+		directionalLightNP.setHpr(180, -20, 0)
+		self.setLight(directionalLightNP)
+
+
+class GreenLaserLong(Laser):
+	def __init__(self, parent, target, name, callback):
+		model = "models/beam"
+		timestep = 0.3
+		damage = 5
+		wrange = 100
+		speed = 70
+		super(GreenLaserLong, self).__init__(model, timestep, parent, target, name, damage, wrange, speed, callback)
+
+	################## Take all of this out, this is just so I could see the laser during testing!!! ################
+		directionalLight = DirectionalLight('directionalLight')
+		directionalLight.setColor(Vec4(0, 1, 0, 1))
+		directionalLightNP = render.attachNewNode(directionalLight)
+
+		directionalLightNP.setHpr(180, -20, 0)
+		self.setLight(directionalLightNP)
+
+
+class GreenLaserShort(Laser):
+	def __init__(self, parent, target, name, callback):
+		model = "models/beam"
+		timestep = 0.3
+		damage = 10
+		wrange = 50
+		speed = 70
+		super(GreenLaserShort, self).__init__(model, timestep, parent, target, name, damage, wrange, speed, callback)
+
+	################## Take all of this out, this is just so I could see the laser during testing!!! ################
+		directionalLight = DirectionalLight('directionalLight')
+		directionalLight.setColor(Vec4(0, 1, 0, 1))
 		directionalLightNP = render.attachNewNode(directionalLight)
 
 		directionalLightNP.setHpr(180, -20, 0)
