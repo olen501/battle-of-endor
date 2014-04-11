@@ -51,8 +51,9 @@ class StarWarsActor(Actor):
 			minNoCol = self.radius + swactor.radius
 
 			if(diff < minNoCol):
-				swactor.onCollision(self)				
+				#swactor.onCollision(self)				
 				self.onCollision(swactor)
+				return
 
 	def onCollision(self, swactor):
 		pass

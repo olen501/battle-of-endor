@@ -17,10 +17,9 @@ from star_wars_actor import StarWarsActor
 
 # Weapon - the base weapon class for all weapons in the simulation
 class Weapon():
-	def __init__(self, name, damage, range, cooldown = 5):
+	def __init__(self, name, weaponType, cooldown = 5):
 		self.name = name
-		self.damage = damage
-		self.range = range
+		self.weaponType = weaponType
 		self.cooldown = cooldown
 
 		# this is a list of references to all laser objects that have been fired
@@ -29,7 +28,7 @@ class Weapon():
 	# Construct a message that this weapon was fired. Likely called from the
 	# weapon system, with the message passed on somehow.
 	def fire(self, parent, target):
-		laser = Laser(parent, target, self.name + str(len(self.shotList)), self.damage, self.range, self.removeShot)
+		laser = self.weaponType(parent, target, self.name + str(len(self.shotList)), self.removeShot)
 		self.shotList.append(laser)
 
 	def getName(self):
@@ -60,16 +59,17 @@ class Weapon():
 
 
 class Laser(StarWarsActor):
-	def __init__(self, parent, target, name, damage, range, callback):
-		super(Laser, self).__init__("models/beamred", 0.3, "laser")
+	def __init__(self, model, timestep, parent, target, name, damage, range, speed, callback):
+		super(Laser, self).__init__(model, timestep, name)
 		self.parent = parent
 		self.target = target
 		self.name = name
 		self.damage = damage
 		self.range = range
+		self.speed = speed
 		self.callback = callback
 		
-		self.speed = 70
+		self.type = 'weapon'
 		self.startPos = self.parent.getPos()
 		# px = self.parent.center.getX()
 		# py = self.parent.center.getY()
@@ -90,34 +90,19 @@ class Laser(StarWarsActor):
 		# add the task of updating to the taskMgr
 		self.tsk = taskMgr.add(self.update, self.name)
 
-################## Take all of this out, this is just so I could see the laser during testing!!! ################
-		directionalLight = DirectionalLight('directionalLight')
-		directionalLight.setColor(Vec4(1, 0, 0, 1))
-		directionalLightNP = render.attachNewNode(directionalLight)
-
-		directionalLightNP.setHpr(180, -20, 0)
-		self.setLight(directionalLightNP)
-
 	def remove(self):
 		taskMgr.remove(self.tsk)
 		self.callback(self)
 		self.destroy()		
 
-	# def onCollision(self, swActor):
-	# 	# ignore other lasers
-	# 	#if not isinstance(swActor, Laser):
-
-	# 	# There's a potential problem with this. Since the collision detection calls both
-	# 	# swactor's onCollision functions, we could get duplicated damage. We need to make
-	# 	# sure that they don't both take off damage. Probably we should have the opposite
-	# 	# of this line in the ship's onCollision. Check if the swactor is a laser, and if
-	# 	# it is, don't do anything
-	# 	if (str(type(swActor)).split()[1].split('.')[0].strip("'") == 'ship'):
-	# 		swActor.hitpoints = swActor.hitpoints - (self.damage * swActor.shields)
-	# 		self.remove()
+	def onCollision(self, swActor):
+		# only look for ships, ignore other lasers
+		if (swActor.type == 'ship'):
+			swActor.onCollision(self)
+			self.remove()
 
 	def getDistance(self, x0, x1):
-		return sqrt((x1.getX() - x0.getX())**2 + (x1.getY() - x0.getY())**2 + (x1.getZ() - x0.getZ())**2)
+		return Vec3(x1 - x0).length()
 
 	def update(self, task):
 		dt = task.time  #this is the elapsed time since the first call of this function
@@ -130,7 +115,25 @@ class Laser(StarWarsActor):
 		distance = self.getDistance(self.startPos, pos)
 		if distance >= self.range:
 			self.remove()
-		# else:
-		# 	self.checkCollision()
+		else:
+			self.checkCollision()
 
 		return task.cont
+
+
+class RedLaserLong(Laser):
+	def __init__(self, parent, target, name, callback):
+		model = "models/beamred"
+		timestep = 0.3
+		damage = 5
+		wrange = 100
+		speed = 70
+		super(RedLaserLong, self).__init__(model, timestep, parent, target, name, damage, wrange, speed, callback)
+
+	################## Take all of this out, this is just so I could see the laser during testing!!! ################
+		directionalLight = DirectionalLight('directionalLight')
+		directionalLight.setColor(Vec4(1, 0, 0, 1))
+		directionalLightNP = render.attachNewNode(directionalLight)
+
+		directionalLightNP.setHpr(180, -20, 0)
+		self.setLight(directionalLightNP)
