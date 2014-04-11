@@ -27,7 +27,7 @@ from navigation_system import NavigationSystem
 # their neighbors, because they are always the same. Only when a new ship enters those cells, or
 # one ship leaves those cells, do we need to update.
 class Ship(StarWarsActor):
-	def __init__(self, model, timestep, name, hitpoints, shields, commandLevel):
+	def __init__(self, model, timestep, name, hitpoints, shields, commandLevel,grid_id):
 		super(Ship, self).__init__(model, timestep, name)
 
 		
@@ -39,7 +39,7 @@ class Ship(StarWarsActor):
 		self.commandLevel = commandLevel
 		self.t = 0
 		self.nearByShips = None
-
+		self.grid_id = None
 		self.type = 'ship'
 		self.target = None
 
@@ -54,6 +54,11 @@ class Ship(StarWarsActor):
 			if self.hitpoints <= 0:
 				self.destroy()
 
+	def setGridID(self, id):
+		self.grid_id = id 
+
+	def getGridID(self):
+		return grid_id
 
 class Xwing(Ship):
 	def __init__(self, name):
