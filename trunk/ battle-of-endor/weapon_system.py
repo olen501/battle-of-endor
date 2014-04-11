@@ -10,12 +10,17 @@ class WeaponSystem(object):
 		# related to the ship. This requires a ship.getName() function in the
 		# Ship() class.
 
+		if ship.team:
+			weaponClose = GreenLaserShort
+			weaponLong = GreenLaserLong
+		else:
+			weaponClose = RedLaserShort
+			weaponLong = RedLaserLong
+
 		# Close range weapon
-		self.weaponCloseRange = Weapon(name = ship.getName()+'-wClose',
-										weaponType = RedLaserLong)
+		self.weaponCloseRange = Weapon(ship.getName()+'-wClose', weaponClose)
 		# Long range weapon
-		self.weaponLongRange  = Weapon(name = ship.getName()+'-wLong',
-										weaponType = RedLaserLong)
+		self.weaponLongRange  = Weapon(ship.getName()+'-wLong', weaponLong)
 
 		# Time required to switch from one weapon to another. Don't know if we
 		# want/need this, but felt it might be good to have the framework for

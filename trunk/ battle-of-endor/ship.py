@@ -62,11 +62,14 @@ class Xwing(Ship):
 		commandLevel = 1
 		model = "models/xwing"
 		timestep = 0.3
-		super(Xwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
-		self.setScale(3)
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
+
+		super(Xwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(3)
+
+
 
 class Ywing(Ship):
 	def __init__(self, name):
@@ -75,11 +78,13 @@ class Ywing(Ship):
 		commandLevel = 1
 		model = "models/ywing"
 		timestep = 0.3
-		super(Ywing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
-		self.setScale(3)
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
+
+		super(Ywing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(3)
+
 
 
 class Awing(Ship):
@@ -89,11 +94,13 @@ class Awing(Ship):
 		commandLevel = 1
 		model = "models/ship"
 		timestep = 0.3
-		super(Awing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
-		self.setScale(2)
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
+
+		super(Awing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(2)
+
 
 
 class Bwing(Ship):
@@ -103,11 +110,13 @@ class Bwing(Ship):
 		commandLevel = 1
 		model = "models/ship"
 		timestep = 0.3
-		super(Bwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
-		self.setScale(2)
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
+
+		super(Bwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(2)
+
 
 
 class TieFighter(Ship):
@@ -117,11 +126,13 @@ class TieFighter(Ship):
 		commandLevel = 1
 		model = "models/tie"
 		timestep = 0.3
-		super(TieFighter, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
-		self.setScale(2)
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 1
+
+		super(TieFighter, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(2)
+
 
 
 class TieInterceptor(Ship):
@@ -131,11 +142,13 @@ class TieInterceptor(Ship):
 		commandLevel = 1
 		model = "models/ship"
 		timestep = 0.3
-		super(TieInterceptor, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
-		self.setScale(2)	
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 1
+		
+		super(TieInterceptor, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(2)	
+
 
 
 # s = Ship(1)

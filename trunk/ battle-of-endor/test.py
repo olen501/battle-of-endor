@@ -64,7 +64,7 @@ class test(ShowBase):
 
 		self.count = 0
 
-		self.fire = False
+		#self.fire = False
 
 
 	def gameLoop(self, task):
@@ -74,9 +74,10 @@ class test(ShowBase):
 
 			if self.count < 100:
 				ship.goTo(Vec3(j*10,10,10))
-				if not self.fire:
-					ship.weaponSystem.fireWeapon()
-					self.fire = True
+				ship.weaponSystem.fireWeapon()
+				# if not self.fire:
+				# 	ship.weaponSystem.fireWeapon()
+				# 	self.fire = True
 			elif self.count < 200:
 				ship.goTo(Vec3(j*20,20,00))
 			elif self.count < 300:
