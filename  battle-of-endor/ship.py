@@ -21,6 +21,11 @@ from navigation_system import NavigationSystem
 # import direct.directbase.DirectStart
 
 
+# Ships should only update their neighbors list when a ship crosses into or out of the neighboring
+# cells around it. Otherwise they don't need to update. Because, for example, if it just happens
+# that the same set of ships stay in the same set of cells, you never need to actually update
+# their neighbors, because they are always the same. Only when a new ship enters those cells, or
+# one ship leaves those cells, do we need to update.
 class Ship(StarWarsActor):
 	def __init__(self, model, timestep, name, hitpoints, shields, commandLevel):
 		super(Ship, self).__init__(model, timestep, name)
@@ -35,81 +40,99 @@ class Ship(StarWarsActor):
 		self.t = 0
 		self.nearByShips = None
 
+		self.type = 'ship'
 		self.target = None
 
 	def goTo(self, loc):
 		self.navSystem.goToLocation(loc)
 
 	def onCollision(self, swActor):
-		if isinstance(swActor, Ship):
+		if (swActor.type == 'ship'):
 			self.destroy()
 		else:
 			self.hitpoints = self.hitpoints - (swActor.damage * self.shields)
-			swActor.remove()
 			if self.hitpoints <= 0:
 				self.destroy()
 
 
 class Xwing(Ship):
-	def __init__(self, model, timestep, name):
+	def __init__(self, name):
 		hitpoints = 200.0
 		shields = 0.5
 		commandLevel = 1
+		model = "models/xwing"
+		timestep = 0.3
 		super(Xwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(3)
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
 
 class Ywing(Ship):
-	def __init__(self, model, timestep, name):
+	def __init__(self, name):
 		hitpoints = 300.0
 		shields = 0.5
 		commandLevel = 1
+		model = "models/ywing"
+		timestep = 0.3
 		super(Ywing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(3)
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
 
 
 class Awing(Ship):
-	def __init__(self, model, timestep, name):
+	def __init__(self, name):
 		hitpoints = 100.0
 		shields = 1.0
 		commandLevel = 1
+		model = "models/ship"
+		timestep = 0.3
 		super(Awing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(2)
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
 
 
 class Bwing(Ship):
-	def __init__(self, model, timestep, name):
+	def __init__(self, name):
 		hitpoints = 300.0
 		shields = 0.5
 		commandLevel = 1
+		model = "models/ship"
+		timestep = 0.3
 		super(Bwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(2)
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
 
 
 class TieFighter(Ship):
-	def __init__(self, model, timestep, name):
+	def __init__(self, name):
 		hitpoints = 100.0
 		shields = 1.0
 		commandLevel = 1
+		model = "models/tie"
+		timestep = 0.3
 		super(TieFighter, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(2)
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 1
 
 
 class TieInterceptor(Ship):
-	def __init__(self, model, timestep, name):
+	def __init__(self, name):
 		hitpoints = 100.0
 		shields = 1.0
 		commandLevel = 1
-		super(TieInterceptor, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)	
+		model = "models/ship"
+		timestep = 0.3
+		super(TieInterceptor, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		self.setScale(2)	
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 1

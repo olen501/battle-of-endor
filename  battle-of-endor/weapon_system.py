@@ -1,8 +1,8 @@
 # from ship import Ship
-from weapon import Weapon
+from weapon import *
 from panda3d.core import Vec3
 
-class WeaponSystem:
+class WeaponSystem(object):
 	def __init__(self, ship):
 		
 		# Ship weapons - in order to make a unique name so that other ships may
@@ -12,12 +12,10 @@ class WeaponSystem:
 
 		# Close range weapon
 		self.weaponCloseRange = Weapon(name = ship.getName()+'-wClose',
-									   damage = 10,
-									   range = 50)
+										weaponType = RedLaserLong)
 		# Long range weapon
 		self.weaponLongRange  = Weapon(name = ship.getName()+'-wLong',
-									   damage = 5,
-									   range = 100)
+										weaponType = RedLaserLong)
 
 		# Time required to switch from one weapon to another. Don't know if we
 		# want/need this, but felt it might be good to have the framework for
