@@ -1,5 +1,5 @@
 from grid import * grid
-from grid import * star_wars_actor
+from star_wars_actor import * star_wars_actor
 
 #Space class representing grid layout of space
 class Space
@@ -26,7 +26,11 @@ class Space
 				y = y+c_size
 				y1 = y+c_size
 			if( y == c_size):
-				z = c_size
+				x = 0
+				x1 = c_size
+				y = 0
+				y1 = y + c_size
+				z = z +c_size
 				z1 = z + c_size
 			grid_id= grid_id+1	
 			self.Space.append(grid)
