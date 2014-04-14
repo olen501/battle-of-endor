@@ -57,6 +57,9 @@ class StarWarsActor(Actor):
 	def gridLocation(self,grid_coordinates):
 		self.grid_coordinates = grid_coordinates
 
+	def getGridLocation(self):
+		return self.grid_coordinates
+
 	def onCollision(self, swactor):
 		pass
 

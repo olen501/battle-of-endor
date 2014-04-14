@@ -2,7 +2,7 @@ from grid import  GridSpace
 from star_wars_actor import StarWarsActor
 
 #Space class representing grid layout of space
-class Space(Object):
+class Space():
 	#creates an heap structure to access grid cells
 	def __init__(self, c_size, c_dim, ship_list):
 		self.s_size = s_size
@@ -47,31 +47,63 @@ class Space(Object):
 	#still need to complete this method
 	def getNeighbors(self,ship):
 		neighbors = []
-		#grid = ship.getGridID()
-		right = grid+1
-		left = grid-1
-		fmright = grid+self.c_dim+1
-		fmmiddle = grid+ self.c_dim
-		fmleft = grid+self.c_dim-1
-		ftright = grid+(self.c_dim*2)+1
-		ftleft = grid+(self.c_dim*2)-1
-		ftmiddle = grid+self.c_dim*2
-		bmright = grid+(self.c_dim*self.c_dim)+1
-		bmleft = grid+(self.c_dim*self.c_dim)-1
-		bmmiddle= grid+(self.c_dim*self.c_dim)
-		
+		grid_coor = ship.getGridLocation()
+		for grid in self.Space.list:
+			if cmp(grid_coor,grid.getCoordinates) == 0:
+				grid_id = grid.id
+		right = grid_id+1
+		left = grid_id-1
+		tmiddle = grid_id+ self.c_dim
+		tleft = tmiddle -1
+		tright = tmiddle + 1
+		bmiddle = grid_id - self.c_dim
+		bright = bmiddle+1
+		bleft = bmmiddle - 1
+		bgrid_id = grid_id + c_dim*c_dim
+		bgrid_id_right = bgrid_id +1
+		bgrid_id_left = bgrid_id-1
+		bgrid_id_bmid = bgrid_id-c_dim
+		bgrid_id_bright = bgrid_id_bmid + 1
+		bgrid_id_bleft = bgrid_id_bmid - 1
+		bgrid_id_tmid = bgrid_id+c_dim
+		bgrid_id_tright = bgrid_id_tmid + 1
+		bgrid_id_tleft = bgrid_id_tmid - 1
+		fgrid_id = grid_id - c_dim*c_dim
+		fgrid_id_right = fgrid_id +1
+		fgrid_id_left = fgrid_id-1
+		fgrid_id_bmid = fgrid_id-c_dim
+		fgrid_id_bright = fgrid_id_bmid + 1
+		fgrid_id_bleft = fgrid_id_bmid - 1
+		fgrid_id_tmid = fgrid_id+c_dim
+		fgrid_id_tright = fgrid_id_tmid + 1
+		fgrid_id_tleft = fgrid_id_tmid - 1
+		neighbors.append(self.Space[grid_id].objects)
+		neighbors.append(self.Space[right].objects)
+		neighbors.append(self.Space[left].objects)
+		neighbors.append(self.Space[tmiddle].objects)		
+		neighbors.append(self.Space[bmmiddle].objects)
+		neighbors.append(self.Space[bright].objects)
+		neighbors.append(self.Space[bleft].objects)
+		neighbors.append(self.Space[bgrid_id].objects)
+		neighbors.append(self.Space[bgrid_id_right].objects)
+		neighbors.append(self.Space[bgrid_id_left].objects)
+		neighbors.append(self.Space[bgrid_id_bmid].objects)
+		neighbors.append(self.Space[bgrid_id_bright].objects)
+		neighbors.append(self.Space[bgrid_id_bleft].objects)
+		neighbors.append(self.Space[bgrid_id_tmid].objects)
+		neighbors.append(self.Space[bgrid_id_tright].objects)
+		neighbors.append(self.Space[bgrid_id_tleft].objects)
+		neighbors.append(self.Space[fgrid_id].objects)
+		neighbors.append(self.Space[fgrid_id_right].objects)
+		neighbors.append(self.Space[fgrid_id_left].objects)
+		neighbors.append(self.Space[fgrid_id_bmid].objects)
+		neighbors.append(self.Space[fgrid_id_bright].objects)
+		neighbors.append(self.Space[fgrid_id_bleft].objects)
+		neighbors.append(self.Space[fgrid_id_tmid].objects)
+		neighbors.append(self.Space[fgrid_id_tright].objects)
+		neighbors.append(self.Space[fgrid_id_tleft].objects)
 
-		neighbors.append(self.Space[grid].getShips())
-		neighbors.append(self.Space[right].getShips())
-		neighbors.append(self.Space[fmright].getShips())
-		neighbors.append(self.Space[fmleft].getShips())
-		neighbors.append(self.Space[ftright].getShips())
-		neighbors.append(self.Space[ftright].getShips())
-		neighbors.append(self.Space[ftleft].getShips())
-		neighbors.append(self.Space[ftmiddle].getShips())
-		neighbors.append(self.Space[bmright].getShips())
-		neighbors.append(self.Space[bmleft].getShips())
-		neighbors.append(self.Space[bmmiddle].getShips())
+
 		return neighbors
 
 
