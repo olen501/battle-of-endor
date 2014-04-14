@@ -231,7 +231,37 @@ class NavigationSystem(object):
 	def updateHeading(self):
 	#-------------------------------------------------------------------------#
 		
-		velocity = Vec3(self.velocity)
+		# velocity = Vec3(self.velocity)
+		# velocity.normalize()
+
+		# # Project velocity onto the xy plane, then calcualte the angle to x
+		# hProj = Vec3(velocity.getX(), velocity.getY(), 0)
+		# hProjN = Vec3(hProj)
+		# hProjN.normalize()
+
+		# # Determine the angle between the projection of the velocity onto the
+		# # XY plane and xh
+		# h = hProjN.angleDeg(self.xh)
+		
+		# # Panda3D will return the smaller of the two angles. We need complete
+		# # rotation, and this calculation gives us the correct heading
+		# if(velocity.getY() <= 0):
+		# 	h = 360 - h
+
+		# # Determine the pitch
+		# p = velocity.angleDeg(self.zh)
+	
+		# self.hpr = Vec3(h-90, 90-p, 0)
+
+		self.hpr = self.getDirection(self.velocity)
+		
+		# Update the heading and pitch of the actor
+		self.swActor.setHpr(self.hpr)
+
+	#-------------------------------------------------------------------------#
+	def getDirection(self, vel):
+	#-------------------------------------------------------------------------#
+		velocity = Vec3(vel)
 		velocity.normalize()
 
 		# Project velocity onto the xy plane, then calcualte the angle to x
@@ -250,13 +280,8 @@ class NavigationSystem(object):
 
 		# Determine the pitch
 		p = velocity.angleDeg(self.zh)
-	
-		self.hpr = Vec3(h-90, 90-p, 0)
-		
-		# Update the heading and pitch of the actor
-		self.swActor.setHpr(self.hpr)
 
-
+		return Vec3(h-90, 90-p, 0)
 
 	#-------------------------------------------------------------------------#
 	def evade(self, attacker):
@@ -307,16 +332,6 @@ class NavigationSystem(object):
 	def setVelocity(self, vel):
 	#-------------------------------------------------------------------------#
 		self.velocity = vel
-
-	#-------------------------------------------------------------------------#
-	def getHeading(self):
-	#-------------------------------------------------------------------------#
-		return self.heading
-	
-	#-------------------------------------------------------------------------#
-	def setHeading(self, heading):
-	#-------------------------------------------------------------------------#
-		self.heading = heading
 
 	#-------------------------------------------------------------------------#
 	def getTurningRadius(self):
