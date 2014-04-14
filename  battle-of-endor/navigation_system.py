@@ -1,6 +1,6 @@
 # Navigation system
 from panda3d.core import TextNode
-from panda3d.core import Point2,Point3,Vec3,Vec4
+from panda3d.core import Point2,Point3,Vec2,Vec3,Vec4
 from direct.gui.OnscreenText import OnscreenText
 from direct.task.Task import Task
 from math import sin, cos, pi
@@ -18,26 +18,38 @@ from direct.actor.Actor import Actor
 # from navigation_system import NavigationSystem
 
 class NavigationSystem(object):
+	#-------------------------------------------------------------------------#
 	def __init__(self, swActor, timestep):
-
+	#-------------------------------------------------------------------------#
 		self.swActor = swActor
-		self.timestep = timestep
 
 		self.position = Vec3()
-		self.velocity = Vec3()
-		self.heading = Vec3(1,0,0)
-		self.headingGlobal = Vec3(0,1,0)
+
+		# Velocity and acceleration are defined in 'ship coordinates'
+		self.velocity = Vec3(1,1,0)
+		self.accel = Vec3(0, 0, 0)
 
 		# Position control
 		self.errorOld = Vec3()
 		self.integralErr = Vec3()
 
 		# PID controller for the swactor acceleration
-		self.accControl = PID(0.2, 0.1, 0.1)
+		self.accControl = PID(0.1, 0.1, 0.1)
 
 		self.i = 0
 
-	def flyInCircle(self):
+		# Coordinate axes for global
+		self.xh = Vec3(1,0,0)
+		self.yh = Vec3(0,1,0)
+		self.zh = Vec3(0,0,1)
+
+		self.uvwOld = Vec3()
+
+		self.updateHeading()
+
+		self.iter = 0
+
+	def flyInCircle(self, dt):
 		theta = self.i / ((2*pi)) % (4*pi);
 		self.i = self.i + 0.1
 		r = 0.50
@@ -47,20 +59,126 @@ class NavigationSystem(object):
 		y = -r*cos(theta)
 		z = -r*sin(theta)
 		vel = Vec3(x,y,z)
+		self.velocity = vel
+		self.updatePosition()
+		self.updateHeading()
+
+
+
+	#-------------------------------------------------------------------------#
+	def goToLocation(self, loc):
+	#-------------------------------------------------------------------------#
+
+		# Define the ship coordinate system
+		shipCoords = Vec3(self.velocity)
+		shipCoords.normalize()
+	
+		# Map location into ship coordinates
+		uh = Vec3(shipCoords.getX(), 0, 0)
+		vh = Vec3(0, shipCoords.getY(), 0)
+		wh = Vec3(0, 0, shipCoords.getZ())
+
+		u = (loc-self.position).project(uh).getX()
+		v = (loc-self.position).project(vh).getY()
+		w = (loc-self.position).project(wh).getZ()
+
+		# This is a hack, but it prevents NaN from getting through
+		if(isnan(u)): u = self.uvwOld.getX()
+		if(isnan(v)): v = self.uvwOld.getY()
+		if(isnan(w)): w = self.uvwOld.getZ()
+		self.uvwOld = Vec3(u,v,w)
+
+		# Error in each direction
+		error = Vec3(u,v,w)		
+
+		# Run the PID controller for the acceleration
+		newVel = self.accControl.run(error)
+
+		maxdTheta = 0.1
+		cm = cos(maxdTheta)
+		sm = sin(maxdTheta)
+
+		# Determine the angle between the new velocity and the old velocity
+		newVelN = Vec3(newVel)
+		newVelN.normalize()
+
+		velN = Vec3(self.velocity) 
+		velN.normalize()
+
+		vx = self.velocity.getX()
+		vy = self.velocity.getY()
+		vz = self.velocity.getZ()
+
+		# Check the change in heading component		
+		velNz = Vec2(velN.getX(),velN.getY())
+		velNz.normalize()
+		velNewNz = Vec2(newVelN.getX(), newVelN.getY())
+		velNewNz.normalize()
+
+		dThetaZ = velNz.signedAngleDeg(velNewNz)
+
+		pos = self.position
+		print pos.getX(), pos.getY()
+
+		c = 1
+		s = 0
+
+		if(dThetaZ > maxdTheta):
+			c = cos(maxdTheta)
+			s = sin(maxdTheta)
+		elif(dThetaZ < -maxdTheta):
+			c = cos(-maxdTheta)
+			s = sin(-maxdTheta)
+		else:
+			c = cos(dThetaZ)
+			s = sin(dThetaZ)
+
+		limitedVel = Vec3()
+		limitedVel = limitedVel + Vec3(vx*c - vy*s,
+             			  			   vx*s + vy*c,
+             			  			   vz )
+
+		# dThetaY = velN.angleDeg(vh)
+		# dThetaZ = velN.angleDeg(wh)
+
 		
+		# limitedVel = limitedVel + Vec3(vx ,
+#               			       vy*c - vz*s,
+#               			       vy*s + vz*c)
+
+		# limitedVel = limitedVel + Vec3(vx*c + vz*s,
+  #             			  			   vy,
+  #             			 			  -vx*s + vz*c)
+
+		# limitedVel = limitedVel + Vec3(vx*c - vy*s,
+  #            			  			   vx*s + vy*c,
+  #            			  			   vz )
+
+		# Maintain the same magnitude of velocity as previously...
+		# This sort of makes sense since you aren't going to increase v
+		# while turning sharply?
+		# limitedVel.normalize()
+		# limitedVel = limitedVel * self.velocity.length()
+
+		newVel = Vec3(limitedVel)
+
+		self.velocity = Vec3(newVel)
+		self.updatePosition()
+		self.updateHeading()
+
+		self.iter += 1
+
+	#-------------------------------------------------------------------------#
+	def updatePosition(self):
+	#-------------------------------------------------------------------------#
 		# Normalize the velocity for later
-		velNorm = Vec3(vel)
+		velNorm = Vec3(self.velocity)
 		velNorm.normalize()
 
-		# Coordinate axes for global
-		xh = Vec3(1,0,0)
-		yh = Vec3(0,1,0)
-		zh = Vec3(0,0,1)
-
 		# Project the velocity onto the coordinate axes
-		px = vel.project(xh)
-		py = vel.project(yh)
-		pz = vel.project(zh)
+		px = self.velocity.project(self.xh)
+		py = self.velocity.project(self.yh)
+		pz = self.velocity.project(self.zh)
 
 		# Determine the change in position...maybe add acceleration?
 		posDelta = Vec3(px.getX(), py.getY(), pz.getZ())#*time + 1/2at^2
@@ -69,83 +187,95 @@ class NavigationSystem(object):
 		self.position = self.position + posDelta
 		self.swActor.setPos(self.position)
 
+		# self.updateHeading(velNorm)
+		
+
+		# print self.position.getX(), self.position.getY(), self.position.getZ()
+	
+	#-------------------------------------------------------------------------#
+	def updateHeading(self):
+	#-------------------------------------------------------------------------#
+		
+		velocity = Vec3(self.velocity)
+		velocity.normalize()
+
 		# Project velocity onto the xy plane, then calcualte the angle to x
-		hProj = Vec3(vel.getX(), vel.getY(), 0)
+		hProj = Vec3(velocity.getX(), velocity.getY(), 0)
 		hProjN = Vec3(hProj)
 		hProjN.normalize()
 
 		# Determine the angle between the projection of the velocity onto the
 		# XY plane and xh
-		h = hProjN.angleDeg(xh)
+		h = hProjN.angleDeg(self.xh)
 		
 		# Panda3D will return the smaller of the two angles. We need complete
 		# rotation, and this calculation gives us the correct heading
-		if(vel.getY() <= 0):
+		if(velocity.getY() <= 0):
 			h = 360 - h
 
 		# Determine the pitch
-		p = velNorm.angleDeg(zh)
-		
+		p = velocity.angleDeg(self.zh)
+	
 		# Update the heading and pitch of the actor
-		# The -90 is an artifact of all models not being aligned. This needs to be
-		# resolved!
 		self.swActor.setH(h-90)
 		self.swActor.setP(90-p)
 
-
-
-	def goToLocation(self, loc):
-
-		curLoc = self.swActor.getPos()
-		error = loc - curLoc
-
-		# Run the PID controller for the acceleration
-		accel = self.accControl.run(error)
-
-		# Calculate the new position and update ships position
-		self.velocity = self.velocity + accel * self.timestep
-		self.heading = self.velocity / self.velocity.length()
-
-		self.position = self.position*self.timestep + accel*self.timestep*self.timestep/2
-		self.swActor.setPos(self.position)
-
-		# Store error
-		self.errorOld = error
-
-
-	def updatePosition(self):
-		self.position = self.position + self.velocity*dt
-		
-
+	#-------------------------------------------------------------------------#
 	def evade(self, attacker):
+	#-------------------------------------------------------------------------#
 		pass
 
+	#-------------------------------------------------------------------------#
 	def pursue(self, target):
+	#-------------------------------------------------------------------------#
 		pass
 
+	#-------------------------------------------------------------------------#
 	def avoidAread(self, Vec3, r):
+	#-------------------------------------------------------------------------#
 		pass
-
+	
+	#-------------------------------------------------------------------------#
 	def removeAvoidArea(self, area):
+	#-------------------------------------------------------------------------#
 		pass
 
+	#-------------------------------------------------------------------------#
 	def checkCollisionCourse(self):
+	#-------------------------------------------------------------------------#
 		pass
 
+	#-------------------------------------------------------------------------#
 	def findNearbyShips(self):
+	#-------------------------------------------------------------------------#
 		pass
 		
+	#-------------------------------------------------------------------------#
 	def getPos(self):
+	#-------------------------------------------------------------------------#
 		return self.position
+	
+	#-------------------------------------------------------------------------#
 	def setPos(self, pos):
+	#-------------------------------------------------------------------------#
 		self.position = pos
 
+	#-------------------------------------------------------------------------#
 	def getVelocity(self):
+	#-------------------------------------------------------------------------#
 		return self.velocity
+	
+	#-------------------------------------------------------------------------#
 	def setVelocity(self, vel):
+	#-------------------------------------------------------------------------#
 		self.velocity = vel
 
+	#-------------------------------------------------------------------------#
 	def getHeading(self):
+	#-------------------------------------------------------------------------#
 		return self.heading
+	
+	#-------------------------------------------------------------------------#
 	def setHeading(self, heading):
+	#-------------------------------------------------------------------------#
 		self.heading = heading
