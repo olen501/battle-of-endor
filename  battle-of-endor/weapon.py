@@ -98,6 +98,8 @@ class Laser(StarWarsActor):
 		# add the task of updating to the taskMgr
 		self.tsk = taskMgr.add(self.update, self.name)
 
+		self.setHpr(self.navSystem.getDirection(self.parent.getVelocity()))
+
 	def remove(self):
 		taskMgr.remove(self.tsk)
 		self.callback(self)
