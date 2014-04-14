@@ -1,6 +1,5 @@
-from star_wars_actor import * star_wars_actor
-
-class GridSpace
+from star_wars_actor import StarWarsActor
+class GridSpace():
 	def __init__(self, x, x1, y, y1, z,z1,id):
 		self.x = x
 		self.x1 = x1
@@ -18,7 +17,7 @@ class GridSpace
 
 	def deleteShip(self,star_wars_actor,objects):
 		for index in range(len(objects)):
-			if(objects[index] == star_wars_actor)
+			if(objects[index] == star_wars_actor):
 				objects.remove(star_wars_actor)
 
 	def getCoordinates(self):
