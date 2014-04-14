@@ -22,7 +22,15 @@ from ship import *
 class test(ShowBase):
 	def __init__(self):
 		ShowBase.__init__(self)
-
+		#setting background
+		self.environ = self.loader.loadModel("models/starfield")
+		#Reparent the model to render
+		self.environ.reparentTo(self.render)
+		#Apply scale and position transforms on the model
+		self.environ.setScale()
+		self.environ.setPos()
+		#end of setting background
+		
 		self.gameTask = taskMgr.add(self.gameLoop, "gameLoop")
 
 		base.disableMouse()
