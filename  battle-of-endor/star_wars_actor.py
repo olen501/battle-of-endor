@@ -32,7 +32,7 @@ class StarWarsActor(Actor):
 		self.detached = False
 
 		self.sight = 100
-
+		self.grid_coordinates = []
 		self.dt = 0
 
 	def update(self, dt, nearBySwActors):
@@ -54,6 +54,9 @@ class StarWarsActor(Actor):
 				#swactor.onCollision(self)				
 				self.onCollision(swactor)
 				return
+
+	def gridLocation(self,grid_coordinates):
+		self.grid_coordinates = grid_coordinates
 
 	def onCollision(self, swactor):
 		pass
