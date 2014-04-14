@@ -22,7 +22,7 @@ class GridSpace():
 
 	def getCoordinates(self):
 		coor = []
-		coor.append(x,x1,y,y1,z,z1);
+		coor.append(self.x,self.x1,self.y,self.y1,self.z,self.z1);
 		return coor
 
 	def getShips(self):
