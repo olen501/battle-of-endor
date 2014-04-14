@@ -69,6 +69,7 @@ class Xwing(Ship):
 		super(Xwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 		self.setScale(3)
 
+		self.setTurningRadius(0.1)
 
 
 class Ywing(Ship):
@@ -132,6 +133,8 @@ class TieFighter(Ship):
 
 		super(TieFighter, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
 		self.setScale(2)
+
+		self.setTurningRadius(0.2)
 
 
 

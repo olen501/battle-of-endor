@@ -25,7 +25,6 @@ class StarWarsActor(Actor):
 		self.name = name
 		self.timestep = timestep
 
-		self.radius = 5
 		self.nearBySwActors = []
 		self.navSystem = NavigationSystem(self, timestep)
 
@@ -91,3 +90,8 @@ class StarWarsActor(Actor):
 		self.sight = sight
 	def getSight(self):
 		return self.sight
+
+	def setTurningRadius(self, r):
+		self.navSystem.setTurningRadius(r)
+	def getTurningRadius(self):
+		return self.navSystem.getTurningRadius()
