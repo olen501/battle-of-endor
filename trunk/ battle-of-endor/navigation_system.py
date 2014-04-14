@@ -15,6 +15,8 @@ from pid import PID
 # from direct.showbase.ShowBase import ShowBase
 from direct.actor.Actor import Actor
 
+from filter import Lpf
+
 # from navigation_system import NavigationSystem
 
 class NavigationSystem(object):
@@ -34,7 +36,7 @@ class NavigationSystem(object):
 		self.integralErr = Vec3()
 
 		# PID controller for the swactor acceleration
-		self.accControl = PID(0.1, 0.1, 0.1)
+		self.accControl = PID(1, 0, 0)
 
 		self.i = 0
 
@@ -49,26 +51,53 @@ class NavigationSystem(object):
 
 		self.iter = 0
 
-	def flyInCircle(self, dt):
+		self.wayPoints = []
+		self.curWayPoint = Vec3()
+		self.wayPointLoc = 0
+
+		self.turningRadius = 0.1
+
+	#-------------------------------------------------------------------------#
+	def flyInCircle(self):
+	#-------------------------------------------------------------------------#
 		theta = self.i / ((2*pi)) % (4*pi);
 		self.i = self.i + 0.1
-		r = 0.50
+		r = 1
 
 		# Determine new velocity
 		x = r*cos(theta)
-		y = -r*cos(theta)
-		z = -r*sin(theta)
+		y = -r*sin(theta)
+		z = 0#-r*sin(theta)
 		vel = Vec3(x,y,z)
-		self.velocity = vel
+
+		self.velocity = vel;
 		self.updatePosition()
 		self.updateHeading()
 
 
 
 	#-------------------------------------------------------------------------#
+	def addWayPoint(self, point):
+	#-------------------------------------------------------------------------#
+		self.wayPoints.append(point)
+	
+	#-------------------------------------------------------------------------#
+	def followWayPoints(self):
+	#-------------------------------------------------------------------------#
+		print Vec3(self.position - self.curWayPoint).length()
+		if(Vec3(self.position - self.curWayPoint).length() < 20):
+			self.wayPointLoc += 1
+			self.curWayPoint = self.wayPoints[self.wayPointLoc]
+		
+		if(self.wayPointLoc == 0):
+			self.curWayPoint = self.wayPoints[self.wayPointLoc]
+
+		self.goToLocation(self.curWayPoint)
+
+	#-------------------------------------------------------------------------#
 	def goToLocation(self, loc):
 	#-------------------------------------------------------------------------#
-
+		# print loc
 		# Define the ship coordinate system
 		shipCoords = Vec3(self.velocity)
 		shipCoords.normalize()
@@ -94,17 +123,19 @@ class NavigationSystem(object):
 		# Run the PID controller for the acceleration
 		newVel = self.accControl.run(error)
 
-		maxdTheta = 0.1
+		# Probably parameterize this value. It is essentially the turning
+		# radius
+		maxdTheta = self.turningRadius
 		cm = cos(maxdTheta)
 		sm = sin(maxdTheta)
 
 		# Determine the angle between the new velocity and the old velocity
 		newVelN = Vec3(newVel)
 		newVelN.normalize()
-
 		velN = Vec3(self.velocity) 
 		velN.normalize()
 
+		# Get the individual velocity components
 		vx = self.velocity.getX()
 		vy = self.velocity.getY()
 		vz = self.velocity.getZ()
@@ -114,15 +145,9 @@ class NavigationSystem(object):
 		velNz.normalize()
 		velNewNz = Vec2(newVelN.getX(), newVelN.getY())
 		velNewNz.normalize()
-
 		dThetaZ = velNz.signedAngleDeg(velNewNz)
 
-		pos = self.position
-		print pos.getX(), pos.getY()
-
-		c = 1
-		s = 0
-
+		# Determine allowed rotation about the Z axis
 		if(dThetaZ > maxdTheta):
 			c = cos(maxdTheta)
 			s = sin(maxdTheta)
@@ -133,6 +158,7 @@ class NavigationSystem(object):
 			c = cos(dThetaZ)
 			s = sin(dThetaZ)
 
+		# Limit the maximum that the ship can turn
 		limitedVel = Vec3()
 		limitedVel = limitedVel + Vec3(vx*c - vy*s,
              			  			   vx*s + vy*c,
@@ -154,14 +180,7 @@ class NavigationSystem(object):
   #            			  			   vx*s + vy*c,
   #            			  			   vz )
 
-		# Maintain the same magnitude of velocity as previously...
-		# This sort of makes sense since you aren't going to increase v
-		# while turning sharply?
-		# limitedVel.normalize()
-		# limitedVel = limitedVel * self.velocity.length()
-
 		newVel = Vec3(limitedVel)
-
 		self.velocity = Vec3(newVel)
 		self.updatePosition()
 		self.updateHeading()
@@ -228,7 +247,7 @@ class NavigationSystem(object):
 	#-------------------------------------------------------------------------#
 	def pursue(self, target):
 	#-------------------------------------------------------------------------#
-		pass
+		self.goToLocation(target.getPos()-target.getVelocity()*5)
 
 	#-------------------------------------------------------------------------#
 	def avoidAread(self, Vec3, r):
@@ -279,3 +298,13 @@ class NavigationSystem(object):
 	def setHeading(self, heading):
 	#-------------------------------------------------------------------------#
 		self.heading = heading
+
+	#-------------------------------------------------------------------------#
+	def getTurningRadius(self):
+	#-------------------------------------------------------------------------#
+		return self.turningRadius
+	
+	#-------------------------------------------------------------------------#
+	def setTurningRadius(self, radius):
+	#-------------------------------------------------------------------------#
+		self.turningRadius = radius
