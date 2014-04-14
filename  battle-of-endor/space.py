@@ -42,7 +42,7 @@ class Space(Object):
 				and((pos.getY() >= g_coor[2]) and (pos.getY() <= g_coor[3]))
 				and((pos.getZ() >= g_coor[4]) and (pos.getZ() <= g_coor[5]))):
 						grid.addShip()
-						
+						ship.gridLocation(g_coor)
 
 	#still need to complete this method
 	def getNeighbors(self,ship):
