@@ -40,7 +40,7 @@ class WeaponSystem(object):
 		self.targetSet = False
 
 		# Reference to a ship that is the target of the weapon system
-		self.target = 0
+		self.target = None
 
 		# Weapon System states
 		self.STATE_IDLE = 0
@@ -118,7 +118,7 @@ class WeaponSystem(object):
 	# Remove a ship from its target
 	def removeTarget(self):
 		self.targetSet = False
-		self.target = 0
+		self.target = None
 
 	# Select a weapon to use based soley on the distance to the target	
 	def selectWeapon(self):
