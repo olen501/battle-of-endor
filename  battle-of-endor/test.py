@@ -74,7 +74,7 @@ class test(ShowBase):
 
 			if self.count < 100:
 				ship.goTo(Vec3(j*10,10,10))
-				ship.weaponSystem.fireWeapon()
+				
 				# if not self.fire:
 				# 	ship.weaponSystem.fireWeapon()
 				# 	self.fire = True
@@ -82,6 +82,7 @@ class test(ShowBase):
 				ship.goTo(Vec3(j*20,20,00))
 			elif self.count < 300:
 				ship.goTo(Vec3(00,00,j*30))
+				ship.weaponSystem.fireWeapon()
 			elif self.count < 400:
 				ship.goTo(Vec3(i*10,0,0))
 		

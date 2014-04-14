@@ -90,8 +90,10 @@ class Laser(StarWarsActor):
 		self.setPos(self.startPos)
 
 		#need to set velocity and heading
-		self.setHeading(self.parent.getHeading())
-		self.setVelocity((self.parent.getHeading() * self.speed) + self.parent.getVelocity())
+		#self.setHeading(self.parent.getHeading())
+		initialVelocity_n = Vec3(self.parent.getVelocity())
+		initialVelocity_n.normalize()
+		self.setVelocity((initialVelocity_n * self.speed) + self.parent.getVelocity())
 
 		# add the task of updating to the taskMgr
 		self.tsk = taskMgr.add(self.update, self.name)
@@ -117,6 +119,7 @@ class Laser(StarWarsActor):
 
 		pos = self.startPos + self.getVelocity()*dt
 		self.setPos(pos)
+		#self.navSystem.goToLocation(pos)
 
 		distance = self.getDistance(self.startPos, pos)
 		if distance >= self.range:
