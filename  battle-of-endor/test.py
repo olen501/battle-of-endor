@@ -27,7 +27,7 @@ class test(ShowBase):
 		#Reparent the model to render
 		self.environ.reparentTo(self.render)
 		#Apply scale and position transforms on the model
-		self.environ.setScale(10, 10, 10)
+		self.environ.setScale(1000, 1000, 1000)
 		self.environ.setPos(0, 0, 0)
 		
 		self.gameTask = taskMgr.add(self.gameLoop, "gameLoop")
