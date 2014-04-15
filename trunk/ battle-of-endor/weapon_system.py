@@ -3,24 +3,17 @@ from weapon import *
 from panda3d.core import Vec3
 
 class WeaponSystem(object):
-	def __init__(self, ship):
+	def __init__(self, ship, weaponClose, weaponLong):
 		
 		# Ship weapons - in order to make a unique name so that other ships may
 		# be less susceptiable to a certain weapon, each weapon has a name
 		# related to the ship. This requires a ship.getName() function in the
 		# Ship() class.
 
-		if ship.team:
-			weaponClose = GreenLaserShort
-			weaponLong = GreenLaserLong
-		else:
-			weaponClose = RedLaserShort
-			weaponLong = RedLaserLong
-
 		# Close range weapon
-		self.weaponCloseRange = Weapon(ship.getName()+'-wClose', weaponClose)
+		self.weaponCloseRange = weaponClose
 		# Long range weapon
-		self.weaponLongRange  = Weapon(ship.getName()+'-wLong', weaponLong)
+		self.weaponLongRange  = weaponLong
 
 		# Time required to switch from one weapon to another. Don't know if we
 		# want/need this, but felt it might be good to have the framework for
@@ -136,4 +129,47 @@ class WeaponSystem(object):
 
 	# Prototype for firing a message
 	def fireWeapon(self):
-		self.activeWeapon.fire(self.ship, self.target)	
+		self.activeWeapon.fire(self.ship, self.target)
+
+
+class XwingWeaponSystem(WeaponSystem):
+	def __init__(self, ship):
+		weaponClose = XwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort)
+		weaponLong = XwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong)
+		super(XwingWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
+
+
+class YwingWeaponSystem(WeaponSystem):
+	def __init__(self, ship):
+		weaponClose = YwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort)
+		weaponLong = YwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong)
+		super(YwingWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
+
+
+class AwingWeaponSystem(WeaponSystem):
+	def __init__(self, ship):
+		weaponClose = AwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort)
+		weaponLong = AwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong)
+		super(AwingWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
+
+
+class BwingWeaponSystem(WeaponSystem):
+	def __init__(self, ship):
+		weaponClose = BwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort)
+		weaponLong = BwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong)
+		super(BwingWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
+
+
+class TieFighterWeaponSystem(WeaponSystem):
+	def __init__(self, ship):
+		weaponClose = TieFighterWeapon(ship, ship.getName() + '-wClose', GreenLaserShort)
+		weaponLong = TieFighterWeapon(ship, ship.getName() + '-wLong', GreenLaserLong)
+		super(TieFighterWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
+
+
+class TieInterceptorWeaponSystem(WeaponSystem):
+	def __init__(self, ship):
+		weaponClose = TieInterceptorWeapon(ship, ship.getName() + '-wClose', GreenLaserShort)
+		weaponLong = TieInterceptorWeapon(ship, ship.getName() + '-wLong', GreenLaserLong)
+		super(TieInterceptorWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
+

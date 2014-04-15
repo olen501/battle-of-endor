@@ -16,8 +16,9 @@ from star_wars_actor import StarWarsActor
 
 
 # Weapon - the base weapon class for all weapons in the simulation
-class Weapon():
-	def __init__(self, name, weaponType, cooldown = 5):
+class Weapon(object):
+	def __init__(self, ship, name, weaponType, cooldown = 5):
+		self.parent = ship
 		self.name = name
 		self.weaponType = weaponType
 		self.cooldown = cooldown
@@ -25,17 +26,10 @@ class Weapon():
 		# this is a list of references to all laser objects that have been fired
 		self.shotList = []
 
-		# for testing only!!!!
-		self.hasFired = False
-
 	# Construct a message that this weapon was fired. Likely called from the
 	# weapon system, with the message passed on somehow.
 	def fire(self, parent, target):
-		# for testing only!!!!!!
-		if not self.hasFired:
-			laser = self.weaponType(parent, target, self.name + str(len(self.shotList)), self.removeShot)
-			self.shotList.append(laser)
-			self.hasFired = True
+		pass
 
 	def getName(self):
 		return self.name
@@ -64,8 +58,102 @@ class Weapon():
 			pass
 
 
+class XwingWeapon(Weapon):
+	def __init__(self, ship, name, weaponType, cooldown = 5):
+		super(XwingWeapon, self).__init__(ship, name, weaponType, cooldown)
+
+		self.gunSelection = 0
+
+		gunPos = [
+			Vec3(-2.5, 2, 1),
+			Vec3(2.5, 2, -1),
+			Vec3(-2.5, 2, -1),
+			Vec3(2.5, 2, 1)]
+
+		self.gunList = []
+		for pos in gunPos:
+			gun = loader.loadModel("models/gun.egg")
+			gun.reparentTo(self.parent)
+			gun.setScale(0.1)
+			gun.setPos(pos)
+			self.gunList.append(gun)
+
+	def fire(self, parent, target):
+		self.gunSelection = (self.gunSelection + 1) % 4
+		laser = self.weaponType(parent, target, self.gunList[self.gunSelection], self.name + str(len(self.shotList)), self.removeShot)
+		self.shotList.append(laser)
+
+class YwingWeapon(Weapon):
+	def __init__(self, ship, name, weaponType, cooldown = 5):
+		super(YwingWeapon, self).__init__(ship, name, weaponType, cooldown)
+		
+	def fire(self, parent, target):
+		pass
+
+class AwingWeapon(Weapon):
+	def __init__(self, ship, name, weaponType, cooldown = 5):
+		super(AwingWeapon, self).__init__(ship, name, weaponType, cooldown)
+		
+	def fire(self, parent, target):
+		pass
+
+class BwingWeapon(Weapon):
+	def __init__(self, ship, name, weaponType, cooldown = 5):
+		super(BwingWeapon, self).__init__(ship, name, weaponType, cooldown)
+		
+	def fire(self, parent, target):
+		pass
+
+class TieFighterWeapon(Weapon):
+	def __init__(self, ship, name, weaponType, cooldown = 5):
+		super(TieFighterWeapon, self).__init__(ship, name, weaponType, cooldown)
+		
+		self.hasFired = False
+		
+		gunPos = [
+			Vec3(1, 0, 0),
+			Vec3(-1, 0, 0)]
+
+
+		self.gunList = []
+		for pos in gunPos:
+			gun = loader.loadModel("models/gun.egg")
+			gun.reparentTo(self.parent)
+			gun.setScale(0.1)
+			gun.setPos(pos)
+			self.gunList.append(gun)
+
+		# pos1 = Vec3(1, 0, 0)
+		# self.gun1 = loader.loadModel("models/gun.egg")
+		# self.gun1.reparentTo(self.parent)
+		# self.gun1.setScale(0.1)
+		# self.gun1.setPos(pos1)
+
+		# pos2 = Vec3(-1, 0, 0)
+		# self.gun2 = loader.loadModel("models/gun.egg")
+		# self.gun2.reparentTo(self.parent)
+		# self.gun2.setScale(0.1)
+		# self.gun2.setPos(pos2)
+
+	def fire(self, parent, target):
+		if not self.hasFired:
+			laser0 = self.weaponType(parent, target, self.gunList[0], self.name + str(len(self.shotList)), self.removeShot)
+			laser1 = self.weaponType(parent, target, self.gunList[1], self.name + str(len(self.shotList)), self.removeShot)
+			self.shotList.append(laser0)
+			self.shotList.append(laser1)
+			self.hasFired = True
+
+
+class TieInterceptorWeapon(Weapon):
+	def __init__(self, name, weaponType, cooldown = 5):
+		super(TieInterceptorWeapon, self).__init__(name, weaponType, cooldown)
+		
+	def fire(self, parent, target):
+		pass
+
+
 class Laser(StarWarsActor):
-	def __init__(self, model, timestep, parent, target, name, damage, range, speed, callback):
+	def __init__(self, model, timestep, parent, target, gun, name, damage, range, speed, callback):
 		super(Laser, self).__init__(model, timestep, name)
 		self.parent = parent
 		self.target = target
@@ -76,7 +164,9 @@ class Laser(StarWarsActor):
 		self.callback = callback
 		
 		self.type = 'weapon'
-		self.startPos = self.parent.getPos()
+		self.startPos = gun.getPos(render)
+		print "Parent: %s, Gun: %s"%(self.parent.getPos(), self.startPos)
+		#self.startPos = self.parent.getPos()
 		# px = self.parent.center.getX()
 		# py = self.parent.center.getY()
 		# pz = self.parent.center.getZ()
@@ -85,7 +175,7 @@ class Laser(StarWarsActor):
 		# tz = self.target.getZ()
 
 		self.reparentTo(render)
-		self.setScale(1)
+		self.setScale(0.5)
 		#self.setPos(Point3(px, py, pz))
 		self.setPos(self.startPos)
 
@@ -133,13 +223,13 @@ class Laser(StarWarsActor):
 
 
 class RedLaserLong(Laser):
-	def __init__(self, parent, target, name, callback):
+	def __init__(self, parent, target, gun, name, callback):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 5
 		wrange = 100
 		speed = 70
-		super(RedLaserLong, self).__init__(model, timestep, parent, target, name, damage, wrange, speed, callback)
+		super(RedLaserLong, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
 	################## Take all of this out, this is just so I could see the laser during testing!!! ################
 		directionalLight = DirectionalLight('directionalLight')
@@ -151,13 +241,13 @@ class RedLaserLong(Laser):
 
 
 class RedLaserShort(Laser):
-	def __init__(self, parent, target, name, callback):
+	def __init__(self, parent, target, gun, name, callback):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 10
 		wrange = 50
 		speed = 70
-		super(RedLaserShort, self).__init__(model, timestep, parent, target, name, damage, wrange, speed, callback)
+		super(RedLaserShort, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
 	################## Take all of this out, this is just so I could see the laser during testing!!! ################
 		directionalLight = DirectionalLight('directionalLight')
@@ -169,13 +259,13 @@ class RedLaserShort(Laser):
 
 
 class GreenLaserLong(Laser):
-	def __init__(self, parent, target, name, callback):
+	def __init__(self, parent, target, gun, name, callback):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 5
 		wrange = 100
 		speed = 70
-		super(GreenLaserLong, self).__init__(model, timestep, parent, target, name, damage, wrange, speed, callback)
+		super(GreenLaserLong, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
 	################## Take all of this out, this is just so I could see the laser during testing!!! ################
 		directionalLight = DirectionalLight('directionalLight')
@@ -187,13 +277,13 @@ class GreenLaserLong(Laser):
 
 
 class GreenLaserShort(Laser):
-	def __init__(self, parent, target, name, callback):
+	def __init__(self, parent, target, gun, name, callback):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 10
 		wrange = 50
 		speed = 70
-		super(GreenLaserShort, self).__init__(model, timestep, parent, target, name, damage, wrange, speed, callback)
+		super(GreenLaserShort, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
 	################## Take all of this out, this is just so I could see the laser during testing!!! ################
 		directionalLight = DirectionalLight('directionalLight')
