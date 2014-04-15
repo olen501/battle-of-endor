@@ -23,13 +23,12 @@ class test(ShowBase):
 	def __init__(self):
 		ShowBase.__init__(self)
 		#setting background
-		self.environ = self.loader.loadModel("models/starfield")
+		self.environ = self.loader.loadModel("models/world")
 		#Reparent the model to render
 		self.environ.reparentTo(self.render)
 		#Apply scale and position transforms on the model
-		self.environ.setScale()
-		self.environ.setPos()
-		#end of setting background
+		self.environ.setScale(10, 10, 10)
+		self.environ.setPos(0, 0, 0)
 		
 		self.gameTask = taskMgr.add(self.gameLoop, "gameLoop")
 
