@@ -1,6 +1,6 @@
 from grid import  GridSpace
 from star_wars_actor import StarWarsActor
-
+import math
 #Space class representing grid layout of space
 class Space():
 	#creates an heap structure to access grid cells
@@ -39,12 +39,12 @@ class Space():
 		#determines what grid the ship is located in
 		for ship in self.ship_list:
 			pos = ship.getPos()
-			grid_id = (((pos.getX()%self.c_dim)*(pos.getX()/self.c_dim))+ ((pos.getY()%self.c_dim)*(pos.getY()/self.c_dim))+((pos.getZ()%self.c_dim)*(pos.getZ()/self.c_dim)))*self.c_dim
+			grid_id = (((pos.getX()%self.c_dim)*(pos.getX()/self.c_dim))+ (((pos.getY()%self.c_dim)*(pos.getY()/self.c_dim))*self.c_dim)+(pos.getZ()/self.c_dim*(self.c_dim*self.c_dim)*((pos.getZ()%self.c_dim)*(pos.getZ()/self.c_dim)))
 			self.Space[grid_id].addShip(ship)
 	
 	def setNeighbors(self,ship):
 		neighbors = []
-		grid_id = (((pos.getX()%self.c_dim)*(pos.getX()/self.c_dim))+ ((pos.getY()%self.c_dim)*(pos.getY()/self.c_dim))+((pos.getZ()%self.c_dim)*(pos.getZ()/self.c_dim)))*self.c_dim
+		grid_id = (((pos.getX()%self.c_dim)*(pos.getX()/self.c_dim))+ (((pos.getY()%self.c_dim)*(pos.getY()/self.c_dim))*self.c_dim)+(pos.getZ()/self.c_dim*(self.c_dim*self.c_dim)*((pos.getZ()%self.c_dim)*(pos.getZ()/self.c_dim)))
 		right = grid_id+1
 		left = grid_id-1
 		tmiddle = grid_id+ self.c_dim
