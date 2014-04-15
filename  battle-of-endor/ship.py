@@ -15,7 +15,7 @@ from panda3d.core import Camera
 from direct.actor.Actor import Actor
 
 from star_wars_actor import StarWarsActor
-from weapon_system import WeaponSystem
+from weapon_system import *
 from navigation_system import NavigationSystem
 
 # import direct.directbase.DirectStart
@@ -27,11 +27,10 @@ from navigation_system import NavigationSystem
 # their neighbors, because they are always the same. Only when a new ship enters those cells, or
 # one ship leaves those cells, do we need to update.
 class Ship(StarWarsActor):
-	def __init__(self, model, timestep, name, hitpoints, shields, commandLevel):
+	def __init__(self, model, timestep, name, hitpoints, shields, commandLevel, weaponSystem):
 		super(Ship, self).__init__(model, timestep, name)
 
-		
-		self.weaponSystem = WeaponSystem(self)
+		self.weaponSystem = weaponSystem(self)
 		# self.commandSystem = CommandSystem()
 
 		self.hitpoints = hitpoints
@@ -62,11 +61,12 @@ class Xwing(Ship):
 		commandLevel = 1
 		model = "models/xwing"
 		timestep = 0.3
+		weaponSystem = XwingWeaponSystem
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
 
-		super(Xwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		super(Xwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel, weaponSystem)
 		self.setScale(3)
 
 		self.setTurningRadius(0.1)
@@ -79,11 +79,12 @@ class Ywing(Ship):
 		commandLevel = 1
 		model = "models/ywing"
 		timestep = 0.3
+		weaponSystem = YwingWeaponSystem
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
 
-		super(Ywing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		super(Ywing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel, weaponSystem)
 		self.setScale(3)
 
 
@@ -95,11 +96,12 @@ class Awing(Ship):
 		commandLevel = 1
 		model = "models/ship"
 		timestep = 0.3
+		weaponSystem = AwingWeaponSystem
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
 
-		super(Awing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		super(Awing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel, weaponSystem)
 		self.setScale(2)
 
 
@@ -111,11 +113,12 @@ class Bwing(Ship):
 		commandLevel = 1
 		model = "models/ship"
 		timestep = 0.3
+		weaponSystem = BwingWeaponSystem
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 0
 
-		super(Bwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		super(Bwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel, weaponSystem)
 		self.setScale(2)
 
 
@@ -127,11 +130,12 @@ class TieFighter(Ship):
 		commandLevel = 1
 		model = "models/tie"
 		timestep = 0.3
+		weaponSystem = TieFighterWeaponSystem
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 1
 
-		super(TieFighter, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		super(TieFighter, self).__init__(model, timestep, name, hitpoints, shields, commandLevel, weaponSystem)
 		self.setScale(2)
 
 		self.setTurningRadius(0.2)
@@ -145,11 +149,12 @@ class TieInterceptor(Ship):
 		commandLevel = 1
 		model = "models/ship"
 		timestep = 0.3
+		weaponSystem = TieInterceptorWeaponSystem
 
 		# team is which side you are on. 0 is rebels, 1 is empire
 		self.team = 1
 
-		super(TieInterceptor, self).__init__(model, timestep, name, hitpoints, shields, commandLevel)
+		super(TieInterceptor, self).__init__(model, timestep, name, hitpoints, shields, commandLevel, weaponSystem)
 		self.setScale(2)	
 
 
