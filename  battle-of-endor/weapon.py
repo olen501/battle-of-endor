@@ -167,7 +167,7 @@ class Laser(StarWarsActor):
 		
 		self.type = 'weapon'
 		self.startPos = gun.getPos(render)
-		print "Parent: %s, Gun: %s"%(self.parent.getPos(), self.startPos)
+		#print "Parent: %s, Gun: %s"%(self.parent.getPos(), self.startPos)
 		#self.startPos = self.parent.getPos()
 		# px = self.parent.center.getX()
 		# py = self.parent.center.getY()
