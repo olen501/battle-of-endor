@@ -76,6 +76,7 @@ class XwingWeapon(Weapon):
 			gun.reparentTo(self.parent)
 			gun.setScale(0.1)
 			gun.setPos(pos)
+			gun.hide()
 			self.gunList.append(gun)
 
 	def fire(self, parent, target):
@@ -121,6 +122,7 @@ class TieFighterWeapon(Weapon):
 			gun.reparentTo(self.parent)
 			gun.setScale(0.1)
 			gun.setPos(pos)
+			gun.hide()
 			self.gunList.append(gun)
 
 		# pos1 = Vec3(1, 0, 0)
