@@ -10,11 +10,11 @@ class GridSpace():
 		self.id = None 
 		self.objects = []
 
-	def addShip(self,star_wars_actor):
-			self.objects.append(star_wars_actor)
+	def addStar_Wars_Actor(self,star_wars_actor):
+		self.objects.append(star_wars_actor)
 
 
-	def deleteShip(self,star_wars_actor):
+	def delete_Star_Wars_Actor(self,star_wars_actor):
 		for index in range(len(objects)):
 			if(self.objects[index] == star_wars_actor):
 				self.objects.remove(star_wars_actor)
@@ -24,5 +24,9 @@ class GridSpace():
 		coor.append(self.x,self.x1,self.y,self.y1,self.z,self.z1);
 		return coor
 
-	def getNeighbors(self):
-		return self.objects
+	def getShips(self):
+		neighbors=[]
+		for star_wars_actor in objects:
+			if(star_wars_actor.type == 'ship'):
+				neighbors.append(star_wars_actor)
+		return neighbors
