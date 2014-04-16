@@ -17,10 +17,11 @@ from star_wars_actor import StarWarsActor
 
 # Weapon - the base weapon class for all weapons in the simulation
 class Weapon(object):
-	def __init__(self, ship, name, weaponType, cooldown = 5):
+	def __init__(self, ship, name, weaponType, range, cooldown = 5):
 		self.parent = ship
 		self.name = name
 		self.weaponType = weaponType
+		self.range = range
 		self.cooldown = cooldown
 
 		# this is a list of references to all laser objects that have been fired
@@ -59,8 +60,9 @@ class Weapon(object):
 
 
 class XwingWeapon(Weapon):
-	def __init__(self, ship, name, weaponType, cooldown = 5):
+	def __init__(self, ship, name, weaponType, wrange, cooldown = 5):
 		super(XwingWeapon, self).__init__(ship, name, weaponType, cooldown)
+		self.range = wrange
 
 		self.gunSelection = 0
 
@@ -72,8 +74,9 @@ class XwingWeapon(Weapon):
 
 		self.gunList = []
 		for pos in gunPos:
-			gun = loader.loadModel("models/gun.egg")
-			gun.reparentTo(self.parent)
+			#gun = loader.loadModel("dummyName")
+			#gun.reparentTo(self.parent)
+			gun = self.parent.attachNewNode("dummyNode")
 			gun.setScale(0.1)
 			gun.setPos(pos)
 			gun.hide()
@@ -81,45 +84,61 @@ class XwingWeapon(Weapon):
 
 	def fire(self, parent, target):
 		self.gunSelection = (self.gunSelection + 1) % 4
-		laser = self.weaponType(parent, target, self.gunList[self.gunSelection], self.name + str(len(self.shotList)), self.removeShot)
+		laser = self.weaponType(parent, target, self.gunList[self.gunSelection], self.name + str(len(self.shotList)), self.range, self.removeShot)
 		self.shotList.append(laser)
 
 class YwingWeapon(Weapon):
-	def __init__(self, ship, name, weaponType, cooldown = 5):
+	def __init__(self, ship, name, weaponType, wrange, cooldown = 5):
 		super(YwingWeapon, self).__init__(ship, name, weaponType, cooldown)
-		
+		self.range = wrange
+
+		gunPos = [
+			Vec3(0.5, 3, 0),
+			Vec3(-0.5, 3, 0)]
+
+		self.gunList = []
+		for pos in gunPos:
+			gun = self.parent.attachNewNode("dummyNode")
+			gun.setScale(0.1)
+			gun.setPos(pos)
+			gun.hide()
+			self.gunList.append(gun)
+
 	def fire(self, parent, target):
-		pass
+		laser0 = self.weaponType(parent, target, self.gunList[0], self.name + str(len(self.shotList)), self.range, self.removeShot)
+		laser1 = self.weaponType(parent, target, self.gunList[1], self.name + str(len(self.shotList)), self.range, self.removeShot)
+		self.shotList.append(laser0)
+		self.shotList.append(laser1)
+
 
 class AwingWeapon(Weapon):
-	def __init__(self, ship, name, weaponType, cooldown = 5):
+	def __init__(self, ship, name, weaponType, wrange, cooldown = 5):
 		super(AwingWeapon, self).__init__(ship, name, weaponType, cooldown)
-		
+		self.range = wrange
+				
 	def fire(self, parent, target):
 		pass
 
 class BwingWeapon(Weapon):
-	def __init__(self, ship, name, weaponType, cooldown = 5):
+	def __init__(self, ship, name, weaponType, wrange, cooldown = 5):
 		super(BwingWeapon, self).__init__(ship, name, weaponType, cooldown)
-		
+		self.range = wrange
+				
 	def fire(self, parent, target):
 		pass
 
 class TieFighterWeapon(Weapon):
-	def __init__(self, ship, name, weaponType, cooldown = 5):
+	def __init__(self, ship, name, weaponType, wrange, cooldown = 5):
 		super(TieFighterWeapon, self).__init__(ship, name, weaponType, cooldown)
-		
-		self.hasFired = False
-		
+		self.range = wrange
+				
 		gunPos = [
-			Vec3(1, 0, 0),
-			Vec3(-1, 0, 0)]
-
+			Vec3(0.5, 4, 0),
+			Vec3(-0.5, 4, 0)]
 
 		self.gunList = []
 		for pos in gunPos:
-			gun = loader.loadModel("models/gun.egg")
-			gun.reparentTo(self.parent)
+			gun = self.parent.attachNewNode("dummyNode")
 			gun.setScale(0.1)
 			gun.setPos(pos)
 			gun.hide()
@@ -138,18 +157,17 @@ class TieFighterWeapon(Weapon):
 		# self.gun2.setPos(pos2)
 
 	def fire(self, parent, target):
-		if not self.hasFired:
-			laser0 = self.weaponType(parent, target, self.gunList[0], self.name + str(len(self.shotList)), self.removeShot)
-			laser1 = self.weaponType(parent, target, self.gunList[1], self.name + str(len(self.shotList)), self.removeShot)
-			self.shotList.append(laser0)
-			self.shotList.append(laser1)
-			self.hasFired = True
+		laser0 = self.weaponType(parent, target, self.gunList[0], self.name + str(len(self.shotList)), self.range, self.removeShot)
+		laser1 = self.weaponType(parent, target, self.gunList[1], self.name + str(len(self.shotList)), self.range, self.removeShot)
+		self.shotList.append(laser0)
+		self.shotList.append(laser1)
 
 
 class TieInterceptorWeapon(Weapon):
-	def __init__(self, name, weaponType, cooldown = 5):
+	def __init__(self, name, weaponType, wrange, cooldown = 5):
 		super(TieInterceptorWeapon, self).__init__(name, weaponType, cooldown)
-		
+		self.range = wrange
+				
 	def fire(self, parent, target):
 		pass
 
@@ -225,11 +243,10 @@ class Laser(StarWarsActor):
 
 
 class RedLaserLong(Laser):
-	def __init__(self, parent, target, gun, name, callback):
+	def __init__(self, parent, target, gun, name, wrange, callback):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 5
-		wrange = 100
 		speed = 70
 		super(RedLaserLong, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
@@ -243,11 +260,10 @@ class RedLaserLong(Laser):
 
 
 class RedLaserShort(Laser):
-	def __init__(self, parent, target, gun, name, callback):
+	def __init__(self, parent, target, gun, name, wrange, callback):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 10
-		wrange = 50
 		speed = 70
 		super(RedLaserShort, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
@@ -261,11 +277,10 @@ class RedLaserShort(Laser):
 
 
 class GreenLaserLong(Laser):
-	def __init__(self, parent, target, gun, name, callback):
+	def __init__(self, parent, target, gun, name, wrange, callback):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 5
-		wrange = 100
 		speed = 70
 		super(GreenLaserLong, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
@@ -279,11 +294,10 @@ class GreenLaserLong(Laser):
 
 
 class GreenLaserShort(Laser):
-	def __init__(self, parent, target, gun, name, callback):
+	def __init__(self, parent, target, gun, name, wrange, callback):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 10
-		wrange = 50
 		speed = 70
 		super(GreenLaserShort, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
