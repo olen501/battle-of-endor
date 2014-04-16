@@ -42,15 +42,32 @@ class Ship(StarWarsActor):
 		self.type = 'ship'
 		self.target = None
 
+	def coordinateTransform(self, loc):
+		shipCoords = Vec3(self.navSystem.getVelocity())
+		shipCoords.normalize()
+	
+		# Map location into ship coordinates
+		uh = Vec3(shipCoords.getX(), 0, 0)
+		vh = Vec3(0, shipCoords.getY(), 0)
+		wh = Vec3(0, 0, shipCoords.getZ())
+
+		u = (loc-self.navSystem.getPos()).project(uh).getX()
+		v = (loc-self.navSystem.getPos()).project(vh).getY()
+		w = (loc-self.navSystem.getPos()).project(wh).getZ()
+
+		return Vec3(u, v, w)
+
 	def goTo(self, loc):
 		self.navSystem.goToLocation(loc)
 
 	def onCollision(self, swActor):
 		if (swActor.type == 'ship'):
+			self.weaponSystem.destroy()
 			self.destroy()
 		else:
 			self.hitpoints = self.hitpoints - (swActor.damage * (1.0 - self.shields))
 			if self.hitpoints <= 0:
+				self.weaponSystem.destroy()
 				self.destroy()
 
 
