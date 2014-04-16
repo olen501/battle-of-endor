@@ -27,7 +27,7 @@ class test(ShowBase):
 		self.environ = self.loader.loadModel("models/world")
 
 		#Reparent the model to render
-		#self.environ.reparentTo(self.render)
+		self.environ.reparentTo(self.render)
 		#Apply scale and position transforms on the model
 
 		self.environ.setScale(1000, 1000, 1000)

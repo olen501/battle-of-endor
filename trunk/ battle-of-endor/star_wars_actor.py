@@ -27,7 +27,7 @@ class StarWarsActor(Actor):
 
 		self.nearBySwActors = []
 		self.navSystem = NavigationSystem(self, timestep)
-
+		self.grid_id = None
 		self.detached = False
 
 		self.sight = 100
@@ -37,6 +37,13 @@ class StarWarsActor(Actor):
 		self.dt = dt
 		self.nearBySwActors = nearBySwActors
 		self.checkCollision()
+
+	def gridLocation(self, c_dim):
+		pos = self.getPos()
+		grid_id = (((pos.getX()%c_dim)*(pos.getX()/c_dim))+ 
+			(((pos.getY()%c_dim)*(pos.getY()/c_dim))*self.c_dim)+
+			(pos.getZ()/c_dim*(c_dim*c_dim)*((pos.getZ()%c_dim)*(pos.getZ()/c_dim))))
+		self.grid_id = grid_id
 
 	def checkCollision(self):
 		# Check all nearby ships for a collision

@@ -1,15 +1,20 @@
 from grid import  GridSpace
 from star_wars_actor import StarWarsActor
 import math
-#Space class representing grid layout of space
+
+#store a reference to all star wars actors
+
+
+
+#Space class representing central controller of space
 class Space():
 	#creates an heap structure to access grid cells
-	def __init__(self, c_size, c_dim, ship_list):
+	def __init__(self, c_size, c_dim, stwa_list):
 		self.c_size = c_size
 		self.c_dim = c_dim
 		num_grids = c_dim * c_dim* c_dim
 		self.Space = [num_grids]
-		self.ship_list = ship_list
+		self.stwa_list = stwa_list
 		x = 0
 		x1 = grid_size
 		y = 0
@@ -37,14 +42,18 @@ class Space():
 			self.Space[index] = grid
 
 		#determines what grid the ship is located in
-		for ship in self.ship_list:
-			pos = ship.getPos()
-			grid_id = (((pos.getX()%self.c_dim)*(pos.getX()/self.c_dim))+ (((pos.getY()%self.c_dim)*(pos.getY()/self.c_dim))*self.c_dim)+(pos.getZ()/self.c_dim*(self.c_dim*self.c_dim)*((pos.getZ()%self.c_dim)*(pos.getZ()/self.c_dim)))
-			self.Space[grid_id].addShip(ship)
+		for star_wars_actor in self.stwa_list:
+			pos = star_wars_actor.getPos()
+			grid_id = (((pos.getX()%self.c_dim)*(pos.getX()/self.c_dim))+ 
+				(((pos.getY()%self.c_dim)*(pos.getY()/self.c_dim))*self.c_dim)+
+				(pos.getZ()/self.c_dim*(self.c_dim*self.c_dim)*((pos.getZ()%self.c_dim)*(pos.getZ()/self.c_dim))))
+			self.Space[grid_id].addShip(star_wars_actor)
 	
-	def setNeighbors(self,ship):
+	def getNeighbors(self,ship):
 		neighbors = []
-		grid_id = (((pos.getX()%self.c_dim)*(pos.getX()/self.c_dim))+ (((pos.getY()%self.c_dim)*(pos.getY()/self.c_dim))*self.c_dim)+(pos.getZ()/self.c_dim*(self.c_dim*self.c_dim)*((pos.getZ()%self.c_dim)*(pos.getZ()/self.c_dim)))
+		grid_id = (((pos.getX()%self.c_dim)*(pos.getX()/self.c_dim))+ 
+			(((pos.getY()%self.c_dim)*(pos.getY()/self.c_dim))*self.c_dim)+
+			(pos.getZ()/self.c_dim*(self.c_dim*self.c_dim)*((pos.getZ()%self.c_dim)*(pos.getZ()/self.c_dim))))
 		right = grid_id+1
 		left = grid_id-1
 		tmiddle = grid_id+ self.c_dim
@@ -71,32 +80,30 @@ class Space():
 		fgrid_id_tmid = fgrid_id+c_dim
 		fgrid_id_tright = fgrid_id_tmid + 1
 		fgrid_id_tleft = fgrid_id_tmid - 1
-		neighbors.append(self.Space[grid_id].objects)
-		neighbors.append(self.Space[right].objects)
-		neighbors.append(self.Space[left].objects)
-		neighbors.append(self.Space[tmiddle].objects)		
-		neighbors.append(self.Space[bmmiddle].objects)
-		neighbors.append(self.Space[bright].objects)
-		neighbors.append(self.Space[bleft].objects)
-		neighbors.append(self.Space[bgrid_id].objects)
-		neighbors.append(self.Space[bgrid_id_right].objects)
-		neighbors.append(self.Space[bgrid_id_left].objects)
-		neighbors.append(self.Space[bgrid_id_bmid].objects)
-		neighbors.append(self.Space[bgrid_id_bright].objects)
-		neighbors.append(self.Space[bgrid_id_bleft].objects)
-		neighbors.append(self.Space[bgrid_id_tmid].objects)
-		neighbors.append(self.Space[bgrid_id_tright].objects)
-		neighbors.append(self.Space[bgrid_id_tleft].objects)
-		neighbors.append(self.Space[fgrid_id].objects)
-		neighbors.append(self.Space[fgrid_id_right].objects)
-		neighbors.append(self.Space[fgrid_id_left].objects)
-		neighbors.append(self.Space[fgrid_id_bmid].objects)
-		neighbors.append(self.Space[fgrid_id_bright].objects)
-		neighbors.append(self.Space[fgrid_id_bleft].objects)
-		neighbors.append(self.Space[fgrid_id_tmid].objects)
-		neighbors.append(self.Space[fgrid_id_tright].objects)
-		neighbors.append(self.Space[fgrid_id_tleft].objects)
-		ship.nearBySwActors = neighbors
+		grid_indexes = [grid_id,right,left,tmiddle,tleft,bmmiddle,bright,bleft,bgrid_id,bgrid_id_right,bgrid_id_left,
+		bgrid_id_bmid,bgrid_id_bright,bgrid_id_bleft,bgrid_id_tmid,bgrid_id_tright,bgrid_id_tleft,fgrid_id,fgrid_id_right,
+		fgrid_id_left,fgrid_id_bmid,fgrid_id_bright,fgrid_id_bleft,fgrid_id_tmid, fgrid_id_tright,fgrid_id_tleft]
+		for index in grid_indexes:
+					neighbors.append(self.Space[index].getShips())
+		star_wars_actor.nearBySwActors = neighbors
+
+
+	#when star wars actor crosses grid update ships
+	#swactor tells space its new grid
+	#space moves ship to new grid
+	#set flag saying these 2 grids change
+		#flag (someone was here or they left)
+		#flag boolean
+	def update(self,ship):
+		grid_id = (((pos.getX()%self.c_dim)*(pos.getX()/self.c_dim))+ 
+			(((pos.getY()%self.c_dim)*(pos.getY()/self.c_dim))*self.c_dim)+
+			(pos.getZ()/self.c_dim*(self.c_dim*self.c_dim)*((pos.getZ()%self.c_dim)*(pos.getZ()/self.c_dim))))
+		old_grid_id = ship.grid_id
+
+		for ship in self.Space[old_grid_id].objects:
+			if(ship == star_wars_actor):
+				self.Space[old_grid_id].delete_Star_Wars_Actor(ship)
+		self.Space[grid_id].addShip(ship)
 
 
 
