@@ -1,9 +1,7 @@
 # Navigation system
-from panda3d.core import Point2,Point3,Vec2,Vec3,Vec4
+from panda3d.core import Point2,Point3,Vec2,Vec3
 from direct.task.Task import Task
 from math import sin, cos, pi
-from math import pi, sin, cos
-from direct.actor.Actor import Actor
 
 class NavigationSystem(object):
 	#-------------------------------------------------------------------------#
@@ -27,7 +25,7 @@ class NavigationSystem(object):
 		self.updateHeading()
 
 		self.wayPoints = []
-		self.curWayPoint = Vec3()
+		self.curWayPoint = None
 		self.wayPointLoc = 0
 		self.i = 0
 
@@ -50,17 +48,21 @@ class NavigationSystem(object):
 	#-------------------------------------------------------------------------#
 	def addWayPoint(self, point):
 		self.wayPoints.append(point)
+
+	#-------------------------------------------------------------------------#
+	def gotoNextWaypoint(self):
+		self.curWayPoint = self.wayPoints.pop(0)
 	
 	#-------------------------------------------------------------------------#
 	def followWayPoints(self):
-		if(Vec3(self.position - self.curWayPoint).length() < 20):
-			self.wayPointLoc += 1
-			self.curWayPoint = self.wayPoints[self.wayPointLoc]
-		
-		if(self.wayPointLoc == 0):
-			self.curWayPoint = self.wayPoints[self.wayPointLoc]
 
-		self.goToLocation(self.curWayPoint)
+		if(self.curWayPoint is not None):
+			if((Vec3(self.position) - Vec3(self.curWayPoint)).length() < 20):
+				self.gotoNextWaypoint()
+				
+
+			print len(self.wayPoints), '\t', self.curWayPoint
+			self.goToLocation(self.curWayPoint)
 
 	#-------------------------------------------------------------------------#
 	def goToLocation(self, loc):
@@ -78,10 +80,7 @@ class NavigationSystem(object):
 		w = (loc-self.position).project(wh).getZ()
 
 		# Error in each direction
-		error = Vec3(u,v,w)		
-
-		# Run the PID controller for the acceleration
-		newVel = error #self.accControl.run(error)
+		newVel = Vec3(u,v,w)		
 
 		# Get the individual current velocity components
 		vx = self.velocity.getX()
@@ -200,7 +199,23 @@ class NavigationSystem(object):
 
 	#-------------------------------------------------------------------------#
 	def evade(self, attacker):
-		pass
+		
+		veln = Vec3(self.velocity)
+		velAn = Vec3(attacker.getVelocity())
+		veln.normalize()
+		velAn.normalize()
+		thetaV = veln.angleDeg(velAn)
+
+		# Get distance between the ships
+		aPos = attacker.getPos()
+		posD = self.getPos()-attacker.getPos()
+
+		if(posD.length() < 100 or abs(thetaV) < 90):
+			self.goToLocation(aPos - Vec3(0,0,aPos.getZ()*10))
+		else:
+			self.updatePosition()
+			self.updateHeading()
+
 
 	#-------------------------------------------------------------------------#
 	def pursue(self, target):
