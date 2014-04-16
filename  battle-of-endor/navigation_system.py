@@ -3,6 +3,8 @@ from panda3d.core import Point2,Point3,Vec2,Vec3
 from direct.task.Task import Task
 from math import sin, cos, pi
 
+from filter import *
+
 class NavigationSystem(object):
 	#-------------------------------------------------------------------------#
 	def __init__(self, swActor, timestep):
@@ -15,11 +17,17 @@ class NavigationSystem(object):
 		self.velocity = Vec3(0.001,1,1)
 		self.accel = Vec3(0, 0, 0)
 		self.hpr = Vec3(0,0,1)
+		self.oldHpr = Vec3(0,1,0)
+		self.velFilter = LpfVec3(Vec3(0,0,0), 3)
+		# self.hprFilter = LpfVec3(Vec3(0,0,0),20)
+		
 
 		# Coordinate axes for global
 		self.xh = Vec3(1,0,0)
 		self.yh = Vec3(0,1,0)
 		self.zh = Vec3(0,0,1)
+
+
 
 		# Update our heading right away
 		self.updateHeading()
@@ -28,6 +36,8 @@ class NavigationSystem(object):
 		self.curWayPoint = None
 		self.wayPointLoc = 0
 		self.i = 0
+
+		
 
 	#-------------------------------------------------------------------------#
 	def flyInCircle(self):
@@ -120,8 +130,11 @@ class NavigationSystem(object):
 		finalVel = Vec3(delVx, delVy, delVz)
 		finalVel.normalize()
 
-		# Scale final Vel by the length of the 'wanted' velocity
-		self.velocity = Vec3(finalVel * min(2,newVel.length()))
+		veluf = finalVel * min(2,newVel.length())
+		velf = self.velFilter.filter(veluf)
+		self.velocity = velf
+
+		print veluf, '\t', velf
 
 		# self.velocity = Vec3(newVel)
 		self.updatePosition()
@@ -158,8 +171,8 @@ class NavigationSystem(object):
 		py = self.velocity.project(self.yh)
 		pz = self.velocity.project(self.zh)
 
-		# Determine the change in position...maybe add acceleration?
-		posDelta = Vec3(px.getX(), py.getY(), pz.getZ())#*time + 1/2at^2
+		# Determine the change in position
+		posDelta = Vec3(px.getX(), py.getY(), pz.getZ())
 
 		# Store the updated position
 		self.position = self.position + posDelta
@@ -170,7 +183,6 @@ class NavigationSystem(object):
 
 		newHpr = Vec3(self.getDirection(self.velocity))
 		self.hpr = newHpr
-		# Update the heading and pitch of the actor
 		self.swActor.setHpr(self.hpr)
 
 	#-------------------------------------------------------------------------#
