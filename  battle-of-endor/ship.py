@@ -70,6 +70,16 @@ class Ship(StarWarsActor):
 				self.weaponSystem.destroy()
 				self.destroy()
 
+	def onTargeted(self, attacker):
+		self.attackers.append(attacker)
+
+	def onUnTargeted(self, attacker):
+		if(attacker in self.attackers): 
+			self.attackers.remove(attacker)
+
+	def getNumAttackers(self):
+		return self.attackers.length()
+
 
 class Xwing(Ship):
 	def __init__(self, name):
@@ -86,7 +96,7 @@ class Xwing(Ship):
 		super(Xwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel, weaponSystem)
 		self.setScale(3)
 
-		self.setTurningRadius(0.1)
+		self.setTurningRadius(0.05)
 
 
 class Ywing(Ship):
@@ -111,7 +121,7 @@ class Awing(Ship):
 		hitpoints = 100.0
 		shields = 0.0
 		commandLevel = 1
-		model = "models/ship"
+		model = "models/awing"
 		timestep = 0.3
 		weaponSystem = AwingWeaponSystem
 
@@ -128,7 +138,7 @@ class Bwing(Ship):
 		hitpoints = 300.0
 		shields = 0.5
 		commandLevel = 1
-		model = "models/ship"
+		model = "models/bwing"
 		timestep = 0.3
 		weaponSystem = BwingWeaponSystem
 
@@ -137,6 +147,8 @@ class Bwing(Ship):
 
 		super(Bwing, self).__init__(model, timestep, name, hitpoints, shields, commandLevel, weaponSystem)
 		self.setScale(2)
+
+		self.setTurningRadius(0.15)
 
 
 
@@ -164,7 +176,7 @@ class TieInterceptor(Ship):
 		hitpoints = 100.0
 		shields = 0.0
 		commandLevel = 1
-		model = "models/ship"
+		model = "models/tie_int"
 		timestep = 0.3
 		weaponSystem = TieInterceptorWeaponSystem
 
