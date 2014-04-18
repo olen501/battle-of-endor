@@ -55,22 +55,25 @@ class WeaponSystem(object):
 		# XXX need to get the DT
 		dt = 0.5
 
-		target = self.getTarget()
-		if target is None:
-			target = self.aquireTarget()
-			self.currentState = self.STATE_IDLE
+		# target = self.getTarget()
+		# print target
 
 		nextState = self.currentState
+		if self.target is None:
+
+			self.target = self.aquireTarget()
+			# self.currentState = self.STATE_IDLE
+			nextState = self.STATE_IDLE	
 
 		if(self.currentState == self.STATE_IDLE):
-			if(target is not None):
-				self.setTarget(target)
+			if(self.target is not None):
+				self.setTarget(self.target)
 				self.activateDt = 0
 				nextState = self.STATE_ACTIVATE
 
 		if(self.currentState == self.STATE_ACTIVATE):
 			if(self.activateDt > self.weaponActivate):
-				self.selectWeapon(target)
+				self.selectWeapon(self.target)
 				self.activateDt = 0
 				nextState = self.STATE_READY
 			else:
@@ -79,12 +82,12 @@ class WeaponSystem(object):
 		if(self.currentState == self.STATE_READY):
 			
 			# New target assignment
-			if((target is not None) and (target != self.target)):
-				self.setTarget(target)				
+			# if((self.target is not None) and (self.target != self.target)):
+				# self.setTarget(target)				
 			
 			# Check if we need to change weapons
 			lastActWeap = self.activeWeapon
-			self.selectWeapon(target)			
+			self.selectWeapon(self.target)			
 			if(self.activeWeapon != lastActWeap):
 				# Change of weapon, must activate it
 				self.activateDt = 0
