@@ -24,10 +24,9 @@ class StarWarsActor(Actor):
 
 		self.name = name
 		self.timestep = timestep
-
 		self.nearBySwActors = []
 		self.navSystem = NavigationSystem(self, timestep)
-		self.grid_id = None
+		self.new_neighbors = None
 		self.detached = False
 
 		self.sight = 100

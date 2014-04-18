@@ -8,6 +8,7 @@ class GridSpace():
 		self.z = z
 		self.z1 = z1
 		self.id = None 
+		self.flag = None
 		self.objects = []
 
 	def addStar_Wars_Actor(self,star_wars_actor):
