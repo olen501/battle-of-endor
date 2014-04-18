@@ -37,10 +37,49 @@ class Ship(StarWarsActor):
 		self.shields = shields
 		self.commandLevel = commandLevel
 		self.t = 0
-		self.nearByShips = None
 		self.grid_id = None
 		self.type = 'ship'
 		self.target = None
+
+		self.task = taskMgr.add(self.update, name + '-task')
+
+	def update(self, task):
+		super(Ship, self).update(task)	
+
+		self.weaponSystem.update(task)
+
+		if(len(self.nearBySwActors) > 0):
+			self.navSystem.pursue(self.nearBySwActors[0])
+
+		# print self.name, '\t', self.hitpoints
+
+		return Task.cont
+
+
+	def goTo(self, loc):
+		self.navSystem.goToLocation(loc)
+
+	def onCollision(self, swActor):
+		 
+		if (swActor.type == 'ship'):
+			self.weaponSystem.destroy()
+			self.destroy()
+		else:
+			print 'here'
+			self.hitpoints = self.hitpoints - (swActor.damage * (1.0 - self.shields))
+			if self.hitpoints <= 0:
+				self.weaponSystem.destroy()
+				self.destroy()
+
+	def onTargeted(self, attacker):
+		self.attackers.append(attacker)
+
+	def onUnTargeted(self, attacker):
+		if(attacker in self.attackers): 
+			self.attackers.remove(attacker)
+
+	def getNumAttackers(self):
+		return self.attackers.length()
 
 	def coordinateTransform(self, loc):
 		shipCoords = Vec3(self.navSystem.getVelocity())
@@ -56,29 +95,6 @@ class Ship(StarWarsActor):
 		w = (loc-self.navSystem.getPos()).project(wh).getZ()
 
 		return Vec3(u, v, w)
-
-	def goTo(self, loc):
-		self.navSystem.goToLocation(loc)
-
-	def onCollision(self, swActor):
-		if (swActor.type == 'ship'):
-			self.weaponSystem.destroy()
-			self.destroy()
-		else:
-			self.hitpoints = self.hitpoints - (swActor.damage * (1.0 - self.shields))
-			if self.hitpoints <= 0:
-				self.weaponSystem.destroy()
-				self.destroy()
-
-	def onTargeted(self, attacker):
-		self.attackers.append(attacker)
-
-	def onUnTargeted(self, attacker):
-		if(attacker in self.attackers): 
-			self.attackers.remove(attacker)
-
-	def getNumAttackers(self):
-		return self.attackers.length()
 
 
 class Xwing(Ship):

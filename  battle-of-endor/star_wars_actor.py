@@ -15,7 +15,7 @@ from panda3d.core import Camera
 from direct.actor.Actor import Actor
 
 from navigation_system import NavigationSystem
-
+from space import space
 # import direct.directbase.DirectStart
 
 class StarWarsActor(Actor):
@@ -24,17 +24,33 @@ class StarWarsActor(Actor):
 
 		self.name = name
 		self.timestep = timestep
+		self.nearBySwActorsAll = []
 		self.nearBySwActors = []
 		self.navSystem = NavigationSystem(self, timestep)
 		self.new_neighbors = None
 		self.detached = False
 
-		self.sight = 100
+		self.sight = 300
 		self.dt = 0
+		self.gridLoc = None
 
-	def update(self, dt, nearBySwActors):
-		self.dt = dt
-		self.nearBySwActors = nearBySwActors
+		self.radius = 5
+
+
+	def update(self, task):
+		# self.onCollision(self)
+		nearBySwActorsAll = []
+
+		if(space.hasNewNeighbors(self.gridLoc)):			
+			nearBySwActorsAll = space.getNeighbors(self)
+
+		self.nearBySwActors = []
+		# Filter by sight
+		for swActor in nearBySwActorsAll:
+			dist = (swActor.getPos() - self.getPos()).length()
+			if( dist < self.sight and swActor != self):
+				self.nearBySwActors.append(swActor)
+
 		self.checkCollision()
 
 	def gridLocation(self, c_dim):
@@ -46,6 +62,7 @@ class StarWarsActor(Actor):
 
 	def checkCollision(self):
 		# Check all nearby ships for a collision
+
 		for swactor in self.nearBySwActors:
 
 			# Calculate distance between two ships
@@ -53,9 +70,7 @@ class StarWarsActor(Actor):
 				swactor.getPos()).length()
 
 			minNoCol = self.radius + swactor.radius
-
 			if(diff < minNoCol):
-				#swactor.onCollision(self)				
 				self.onCollision(swactor)
 				return
 
@@ -63,8 +78,27 @@ class StarWarsActor(Actor):
 		pass
 
 	def destroy(self):
+		# XXX remove from central controller
 		self.detachNode()
 		self.detached = True
+
+	def updateCellLocation(self):
+		cSize = space.c_size
+		x = floor(self.getPos().getX()/cSize)
+		y = floor(self.getPos().getY()/cSize)
+		z = floor(self.getPos().getZ()/cSize)
+
+		if(self.gridLoc is None):
+			newGridLoc = Vec3(x,y,z)
+			space.update(self, self.gridLoc, newGridLoc)
+			self.gridLoc = Vec3(newGridLoc)
+		elif( (self.gridLoc.getX() != x) or
+			  (self.gridLoc.getY() != y) or
+			  (self.gridLoc.getZ() != y) ):
+			newGridLoc = Vec3(x,y,z)
+			space.update(self, self.gridLoc, newGridLoc)
+			self.gridLoc = Vec3(newGridLoc)
+
 
 	def getName(self):
 		return self.name
@@ -75,6 +109,8 @@ class StarWarsActor(Actor):
 	def setPos(self, pos):
 		super(StarWarsActor, self).setPos(pos)
 		self.navSystem.setPos(pos)
+		self.updateCellLocation()
+
 	def getPos(self):
 		return self.navSystem.getPos()
 
