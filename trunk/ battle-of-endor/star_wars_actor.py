@@ -45,8 +45,8 @@ class StarWarsActor(Actor):
 
 		if(space.hasNewNeighbors(self.gridLoc) or self.firstLoad == True):			
 			self.nearBySwActorsAll = space.getNeighbors(self.gridLoc)
-			if(self.name == "xwing1"):
-				print 'getting new ships', len(self.nearBySwActorsAll)
+			# if(self.name == "xwing1"):
+				# print 'getting new ships', len(self.nearBySwActorsAll)
 
 		self.nearBySwActors = []
 		# Filter by sight
@@ -59,13 +59,6 @@ class StarWarsActor(Actor):
 		self.checkCollision()
 
 		self.firstLoad = False
-
-	def gridLocation(self, c_dim):
-		pos = self.getPos()
-		grid_id = (((pos.getX()%c_dim)*(pos.getX()/c_dim))+ 
-			(((pos.getY()%c_dim)*(pos.getY()/c_dim))*self.c_dim)+
-			(pos.getZ()/c_dim*(c_dim*c_dim)*((pos.getZ()%c_dim)*(pos.getZ()/c_dim))))
-		self.grid_id = grid_id
 
 	def checkCollision(self):
 		# Check all nearby ships for a collision
@@ -86,6 +79,7 @@ class StarWarsActor(Actor):
 	def destroy(self):
 		# XXX remove from central controller
 
+		taskMgr.remove(self.task)
 		self.detachNode()
 		self.detached = True
 		space.remove(self, self.gridLoc)
