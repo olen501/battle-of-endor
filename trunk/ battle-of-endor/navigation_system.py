@@ -3,6 +3,8 @@ from panda3d.core import Point2,Point3,Vec2,Vec3
 from direct.task.Task import Task
 from math import sin, cos, pi
 
+from filter import *
+
 class NavigationSystem(object):
 	#-------------------------------------------------------------------------#
 	def __init__(self, swActor, timestep):
@@ -15,6 +17,8 @@ class NavigationSystem(object):
 		self.velocity = Vec3(0.001,1,1)
 		self.accel = Vec3(0, 0, 0)
 		self.hpr = Vec3(0,0,1)
+		self.velFilter = LpfVec3(Vec3(0,0,0),4)
+		self.hprFilter = LpfVec3(Vec3(0,0,0),2)
 
 		# Coordinate axes for global
 		self.xh = Vec3(1,0,0)
@@ -62,27 +66,11 @@ class NavigationSystem(object):
 			if((Vec3(self.position) - Vec3(self.curWayPoint)).length() < 20):
 				self.gotoNextWaypoint()
 				
-
-			print len(self.wayPoints), '\t', self.curWayPoint
 			self.goToLocation(self.curWayPoint)
 
 	#-------------------------------------------------------------------------#
 	def goToLocation(self, loc):
-		# Define the ship coordinate system
-		# shipCoords = Vec3(self.velocity)
-		# shipCoords.normalize()
-	
-		# # Map location into ship coordinates
-		# uh = Vec3(shipCoords.getX(), 0, 0)
-		# vh = Vec3(0, shipCoords.getY(), 0)
-		# wh = Vec3(0, 0, shipCoords.getZ())
 
-		# u = (loc-self.position).project(uh).getX()
-		# v = (loc-self.position).project(vh).getY()
-		# w = (loc-self.position).project(wh).getZ()
-
-		# # Error in each direction
-		# newVel = Vec3(u,v,w)
 #### This could be a bug, because coordinateTransform is only in Ship, not in StarWarActor!!!!!!	
 		newVel = self.swActor.coordinateTransform(loc)	
 
@@ -124,10 +112,9 @@ class NavigationSystem(object):
 		finalVel = Vec3(delVx, delVy, delVz)
 		finalVel.normalize()
 
-		# Scale final Vel by the length of the 'wanted' velocity
-		self.velocity = Vec3(finalVel * min(2,newVel.length()))
+		velF = self.velFilter.filter(finalVel * max(1,min(4, newVel.length)))
+		self.velocity = velF 
 
-		# self.velocity = Vec3(newVel)
 		self.updatePosition()
 		self.updateHeading()
 
@@ -173,7 +160,8 @@ class NavigationSystem(object):
 	def updateHeading(self):
 
 		newHpr = Vec3(self.getDirection(self.velocity))
-		self.hpr = newHpr
+		self.hpr = self.hprFilter.filter(newHpr)
+
 		# Update the heading and pitch of the actor
 		self.swActor.setHpr(self.hpr)
 
@@ -199,7 +187,9 @@ class NavigationSystem(object):
 		# Determine the pitch
 		p = velocity.angleDeg(self.zh)
 
-		return Vec3(h-90, 90-p, 0)
+		r = -self.getAngle(Vec2(velocity.getY(),velocity.getX()),Vec2(1,1))
+		# r = 0
+		return Vec3(h-90, 90-p, r)
 
 	#-------------------------------------------------------------------------#
 	def evade(self, attacker):
