@@ -41,7 +41,6 @@ class test(ShowBase):
 		tie = TieFighter("tie1")
 
 		self.shipList = [xwing, tie]
-
 		
 		# xwing.weaponSystem.fireWeapon()
 
@@ -52,13 +51,12 @@ class test(ShowBase):
 			# ship.setLight(dlNP)
 			ship.setLight(alNP)
 
-
-		base.camera.setPos(tie.getPos()+Vec3(0,50,0))
+		base.camera.setPos(tie.getPos()+Vec3(20,50,0))
 		base.camera.lookAt(xwing.getPos())
 		taskMgr.add(self.clearSpaceFlag, 'clearFlags')
 
 	def clearSpaceFlag(self, task):
-		# space.clearFlag()
+		space.clearFlag()
 		# space.printSpace() # WARNING THIS WILL CAUSE THINGS TO LOCK UP
 		pass
 

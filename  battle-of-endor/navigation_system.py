@@ -14,7 +14,7 @@ class NavigationSystem(object):
 		self.position = Vec3()
 
 		# Velocity and acceleration are defined in 'ship coordinates'
-		self.velocity = Vec3(0.001,1,1)
+		self.velocity = Vec3(0.001,1,0.001)
 		self.accel = Vec3(0, 0, 0)
 		self.hpr = Vec3(0,0,1)
 		self.velFilter = LpfVec3(Vec3(0,0,0),4)

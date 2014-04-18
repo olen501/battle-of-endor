@@ -41,15 +41,17 @@ class Ship(StarWarsActor):
 		self.type = 'ship'
 		self.target = None
 
-		self.task = taskMgr.add(self.update, name + '-task')
+		
 
 	def update(self, task):
 		super(Ship, self).update(task)	
 
 		self.weaponSystem.update(task)
 
-		if(len(self.nearBySwActors) > 0):
-			self.navSystem.pursue(self.nearBySwActors[0])
+		# print self.name , len(self.nearBySwActors)
+
+		#if(len(self.nearBySwActors) > 0):
+			# self.navSystem.pursue(self.nearBySwActors[0])
 
 		# print self.name, '\t', self.hitpoints
 
@@ -65,11 +67,11 @@ class Ship(StarWarsActor):
 			self.weaponSystem.destroy()
 			self.destroy()
 		else:
-			print 'here'
 			self.hitpoints = self.hitpoints - (swActor.damage * (1.0 - self.shields))
 			if self.hitpoints <= 0:
 				self.weaponSystem.destroy()
 				self.destroy()
+		# print self.name, '\t', self.hitpoints
 
 	def onTargeted(self, attacker):
 		self.attackers.append(attacker)

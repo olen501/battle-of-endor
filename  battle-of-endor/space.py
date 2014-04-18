@@ -2,18 +2,6 @@ from grid import  GridSpace
 from panda3d.core import Point2,Point3,Vec3,Vec4
 import math
 
-#store a reference to all star wars actors
-#ships need to check if neighbors changed
-	#flag if grids around you have changed
-
-#when star wars actor crosses grid update ships
-	#swactor tells space its new grid
-	#space moves ship to new grid
-	#set flag saying these 2 grids change
-		#flag (someone was here or they left)
-		#flag boolean
-	
-
 #Space class representing central controller of space
 class Space():
 	#creates an heap structure to access grid cells
@@ -21,6 +9,8 @@ class Space():
 		self.c_size = c_size
 		self.c_dim = c_dim
 		self.Space = []
+
+		self.cellsWithChanges = []
 
 		for k in range(0, c_dim):
 			newLevel = []
@@ -34,8 +24,6 @@ class Space():
 		
    	def update(self,stwa,oldLoc,newLoc):		
 
-   		
-
    		nx = int(newLoc.getX())
    		ny = int(newLoc.getY())
    		nz = int(newLoc.getZ())
@@ -45,8 +33,19 @@ class Space():
    			oy = int(oldLoc.getY())
    			oz = int(oldLoc.getZ())
 			self.Space[ox][oy][oz].removeActor(stwa)
+			self.cellsWithChanges.append(oldLoc)
 
-		self.Space[nx][ny][nz].addActor(stwa)	
+		self.Space[nx][ny][nz].addActor(stwa)
+		self.cellsWithChanges.append(newLoc)
+
+	def remove(self, stwa, loc):
+		x = int(loc.getX())
+   		y = int(loc.getY())
+   		z = int(loc.getZ())
+
+   		self.Space[x][y][z].removeActor(stwa)
+   		self.cellsWithChanges.append(loc)
+
 
 	def getNeighbors(self,gridLoc):
 
@@ -56,11 +55,11 @@ class Space():
 
 		neighbors = []
 
-		for i in range(x - 1, x + 1):
+		for i in range(x - 1, x + 2):
 			if(i >= 0 and i < self.c_dim):
-				for j in range(y - 1, y + 1):
+				for j in range(y - 1, y + 2):
 					if(j >= 0 and j < self.c_dim):
-						for k in range(z - 1, z + 1):
+						for k in range(z - 1, z + 2):
 							if(k >= 0 and k < self.c_dim):
 								neighbors += self.Space[i][j][k].getShips()
 
@@ -68,20 +67,34 @@ class Space():
 
 
 	def hasNewNeighbors(self, gridLoc):
+
 		x = int(gridLoc.getX())
 		y = int(gridLoc.getY())
 		z = int(gridLoc.getZ())
-
 		res = False
-
-		for i in range(x - 1, x + 1):
+		for i in range(x - 1, x + 2):
 			if(i >= 0 and i < self.c_dim):
-				for j in range(y - 1, y + 1):
+				for j in range(y - 1, y + 2):
 					if(j >= 0 and j < self.c_dim):
-						for k in range(z - 1, z + 1):
+						for k in range(z - 1, z + 2):
 							if(k >= 0 and k < self.c_dim):
 								if(self.Space[i][j][k].getFlag() == True):
 									return True	
+		return False
+
+	def printSpace(self):
+		for i in range(0, self.c_dim):
+			for j in range(0, self.c_dim):
+				for k in range(0, self.c_dim):
+					print i,j,k, len(self.Space[i][j][k].actors)
+
+	# XXX Need a better way to clear flags. Probably store an index
+	def clearFlag(self):
+		for cell in self.cellsWithChanges:
+			x = int(cell.getX())
+			y = int(cell.getY())
+			z = int(cell.getZ())
+			self.Space[x][y][z].clearFlag()
 
 space = Space(100, 50)
 
