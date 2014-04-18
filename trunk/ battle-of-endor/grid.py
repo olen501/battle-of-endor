@@ -32,4 +32,4 @@ class GridSpace():
 	def getFlag(self):
 		return self.flag
 	def clearFlag(self):
-		set.flag = False
+		self.flag = False

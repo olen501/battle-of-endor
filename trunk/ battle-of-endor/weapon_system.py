@@ -53,7 +53,7 @@ class WeaponSystem(object):
 	def update(self, task):
 
 		# XXX need to get the DT
-		dt = 0.1
+		dt = 0.5
 
 		target = self.getTarget()
 		if target is None:

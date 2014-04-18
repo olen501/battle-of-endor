@@ -50,7 +50,7 @@ class Weapon(object):
 	def getCooldown(self):
 		return self.cooldown
 	def setCooldown(self, cooldown):
-		self.cooldown = cooldown1
+		self.cooldown = cooldown
 
 	def removeShot(self, shot):
 		try:
@@ -60,7 +60,7 @@ class Weapon(object):
 
 
 class XwingWeapon(Weapon):
-	def __init__(self, ship, name, weaponType, wrange, cooldown = 5):
+	def __init__(self, ship, name, weaponType, wrange, cooldown = 0):
 		super(XwingWeapon, self).__init__(ship, name, weaponType, cooldown)
 		self.range = wrange
 
@@ -205,19 +205,16 @@ class Laser(StarWarsActor):
 		initialVelocity_n.normalize()
 		self.setVelocity((initialVelocity_n * self.speed) + self.parent.getVelocity())
 
-		# add the task of updating to the taskMgr
-		self.tsk = taskMgr.add(self.update, self.name)
-
 		self.setHpr(self.navSystem.getDirection(self.parent.getVelocity()))
 
 	def remove(self):
-		taskMgr.remove(self.tsk)
+		taskMgr.remove(self.task)
 		self.callback(self)
 		self.destroy()		
 
 	def onCollision(self, swActor):
 		# only look for ships, ignore other lasers
-		if (swActor.type == 'ship'):
+		if (swActor.type == 'ship' and swActor != self.parent):
 			swActor.onCollision(self)
 			self.remove()
 

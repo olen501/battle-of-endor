@@ -36,22 +36,29 @@ class StarWarsActor(Actor):
 
 		self.radius = 5
 
+		self.task = taskMgr.add(self.update, name + '-task')
+
+		self.firstLoad = True
 
 	def update(self, task):
 		# self.onCollision(self)
-		nearBySwActorsAll = []
 
-		if(space.hasNewNeighbors(self.gridLoc)):			
-			nearBySwActorsAll = space.getNeighbors(self)
+		if(space.hasNewNeighbors(self.gridLoc) or self.firstLoad == True):			
+			self.nearBySwActorsAll = space.getNeighbors(self.gridLoc)
+			if(self.name == "xwing1"):
+				print 'getting new ships', len(self.nearBySwActorsAll)
 
 		self.nearBySwActors = []
 		# Filter by sight
-		for swActor in nearBySwActorsAll:
+
+		for swActor in self.nearBySwActorsAll:
 			dist = (swActor.getPos() - self.getPos()).length()
 			if( dist < self.sight and swActor != self):
 				self.nearBySwActors.append(swActor)
 
 		self.checkCollision()
+
+		self.firstLoad = False
 
 	def gridLocation(self, c_dim):
 		pos = self.getPos()
@@ -62,9 +69,8 @@ class StarWarsActor(Actor):
 
 	def checkCollision(self):
 		# Check all nearby ships for a collision
-
 		for swactor in self.nearBySwActors:
-
+			
 			# Calculate distance between two ships
 			diff = Vec3(self.getPos() - 
 				swactor.getPos()).length()
@@ -79,8 +85,10 @@ class StarWarsActor(Actor):
 
 	def destroy(self):
 		# XXX remove from central controller
+
 		self.detachNode()
 		self.detached = True
+		space.remove(self, self.gridLoc)
 
 	def updateCellLocation(self):
 		cSize = space.c_size
