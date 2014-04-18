@@ -1,6 +1,6 @@
 # from ship import Ship
 from weapon import *
-from panda3d.core import Vec3
+from panda3d.core import Vec3, Vec2
 
 class WeaponSystem(object):
 	def __init__(self, ship, weaponClose, weaponLong):
@@ -50,11 +50,14 @@ class WeaponSystem(object):
 	# Iterate through a state machine for the weapon system.
 	# Need an elapsed time since the last frame
 	# This is not final, but a rough outline
-	def update(self, dt, nearByShips):
+	def update(self, task):
+
+		# XXX need to get the DT
+		dt = 0.1
 
 		target = self.getTarget()
 		if target is None:
-			target = self.aquireTarget(nearByShips)
+			target = self.aquireTarget()
 			self.currentState = self.STATE_IDLE
 
 		nextState = self.currentState
@@ -104,8 +107,8 @@ class WeaponSystem(object):
 
 
 	# Prototype method - ultimately how the weapon system selects a target	
-	def aquireTarget(self, nearByShips):
-		for nearByShip in nearByShips:
+	def aquireTarget(self):
+		for nearByShip in self.ship.nearBySwActors:
 			if self.ship.team != nearByShip.team:
 				if self.getDistanceToTarget(nearByShip) <= self.weaponLongRange.getRange():
 					return nearByShip
@@ -156,10 +159,10 @@ class WeaponSystem(object):
 			return False
 
 	def destroy(self):
-		for gun in self.weaponClose.gunList:
-			gun.destroy()
-		for gun in self.weaponLong.gunList:
-			gun.destroy()
+		for gun in self.weaponCloseRange.gunList:
+			gun.detachNode()
+		for gun in self.weaponLongRange.gunList:
+			gun.detachNode()
 
 
 class XwingWeaponSystem(WeaponSystem):

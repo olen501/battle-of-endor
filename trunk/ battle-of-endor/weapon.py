@@ -225,6 +225,7 @@ class Laser(StarWarsActor):
 		return Vec3(x1 - x0).length()
 
 	def update(self, task):
+		super(Laser,self).update(task)
 		dt = task.time  #this is the elapsed time since the first call of this function
 		#dt = task.time - task.last  #obtains the time since that last frame.
 		#task.last = task.time
@@ -236,8 +237,8 @@ class Laser(StarWarsActor):
 		distance = self.getDistance(self.startPos, pos)
 		if distance >= self.range:
 			self.remove()
-		else:
-			self.checkCollision()
+		# else:
+			# self.checkCollision()
 
 		return task.cont
 
