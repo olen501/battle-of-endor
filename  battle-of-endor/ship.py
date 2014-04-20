@@ -37,7 +37,6 @@ class Ship(StarWarsActor):
 		self.shields = shields
 		self.commandLevel = commandLevel
 		self.t = 0
-		self.grid_id = None
 		self.type = 'ship'
 		self.target = None
 
@@ -47,13 +46,6 @@ class Ship(StarWarsActor):
 		super(Ship, self).update(task)	
 
 		self.weaponSystem.update(task)
-
-		# print self.name , len(self.nearBySwActors)
-
-		#if(len(self.nearBySwActors) > 0):
-			# self.navSystem.pursue(self.nearBySwActors[0])
-
-		# print self.name, '\t', self.hitpoints
 
 		return Task.cont
 
