@@ -54,6 +54,9 @@ class Space():
 
 	def getNeighbors(self,gridLoc):
 
+		if(gridLoc is None):
+			return []
+			
 		x = int(gridLoc.getX())
 		y = int(gridLoc.getY())
 		z = int(gridLoc.getZ())
@@ -73,6 +76,9 @@ class Space():
 
 	def hasNewNeighbors(self, gridLoc):
 
+		if(gridLoc is None):
+			return False
+			
 		x = int(gridLoc.getX())
 		y = int(gridLoc.getY())
 		z = int(gridLoc.getZ())
