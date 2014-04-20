@@ -112,7 +112,7 @@ class NavigationSystem(object):
 		finalVel = Vec3(delVx, delVy, delVz)
 		finalVel.normalize()
 
-		velF = self.velFilter.filter(finalVel * max(1,min(4, newVel.length)))
+		velF = self.velFilter.filter(finalVel * max(1,min(4, newVel.length())))
 		self.velocity = velF 
 
 		self.updatePosition()
@@ -213,7 +213,7 @@ class NavigationSystem(object):
 
 	#-------------------------------------------------------------------------#
 	def pursue(self, target):
-		self.goToLocation(target.getPos()-target.getVelocity()*15)
+		self.goToLocation(target.getPos()-target.getVelocity()*3)
 
 	#-------------------------------------------------------------------------#
 	def avoidAread(self, Vec3, r):

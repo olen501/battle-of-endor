@@ -96,5 +96,8 @@ class Space():
 			z = int(cell.getZ())
 			self.Space[x][y][z].clearFlag()
 
-space = Space(100, 50)
+	def getC_dim(self):
+		return self.c_dim
+
+space = Space(500, 20)
 

@@ -30,7 +30,7 @@ class StarWarsActor(Actor):
 		self.new_neighbors = None
 		self.detached = False
 
-		self.sight = 300
+		self.sight = 1000
 		self.dt = 0
 		self.gridLoc = None
 
@@ -41,23 +41,19 @@ class StarWarsActor(Actor):
 		self.firstLoad = True
 
 	def update(self, task):
-		# self.onCollision(self)
 
 		if(space.hasNewNeighbors(self.gridLoc) or self.firstLoad == True):			
 			self.nearBySwActorsAll = space.getNeighbors(self.gridLoc)
-			# if(self.name == "xwing1"):
-				# print 'getting new ships', len(self.nearBySwActorsAll)
 
 		self.nearBySwActors = []
+		
 		# Filter by sight
-
 		for swActor in self.nearBySwActorsAll:
 			dist = (swActor.getPos() - self.getPos()).length()
 			if( dist < self.sight and swActor != self):
 				self.nearBySwActors.append(swActor)
 
 		self.checkCollision()
-
 		self.firstLoad = False
 
 	def checkCollision(self):
@@ -86,9 +82,9 @@ class StarWarsActor(Actor):
 
 	def updateCellLocation(self):
 		cSize = space.c_size
-		x = floor(self.getPos().getX()/cSize)
-		y = floor(self.getPos().getY()/cSize)
-		z = floor(self.getPos().getZ()/cSize)
+		x = self.limitCellLoc(floor(self.getPos().getX()/cSize))
+		y = self.limitCellLoc(floor(self.getPos().getY()/cSize))
+		z = self.limitCellLoc(floor(self.getPos().getZ()/cSize))
 
 		if(self.gridLoc is None):
 			newGridLoc = Vec3(x,y,z)
@@ -100,6 +96,13 @@ class StarWarsActor(Actor):
 			newGridLoc = Vec3(x,y,z)
 			space.update(self, self.gridLoc, newGridLoc)
 			self.gridLoc = Vec3(newGridLoc)
+
+	def limitCellLoc(self, val):
+		if(val < 0):
+			val = 0
+		elif(val >= space.getC_dim()):
+			val = space.getC_dim() - 1
+		return val
 
 
 	def getName(self):
