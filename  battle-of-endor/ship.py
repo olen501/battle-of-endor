@@ -61,6 +61,7 @@ class Ship(StarWarsActor):
 		else:
 			self.hitpoints = self.hitpoints - (swActor.damage * (1.0 - self.shields))
 			if self.hitpoints <= 0:
+				swActor.parent.onTargetDestroyed()
 				self.weaponSystem.destroy()
 				self.destroy()
 		# print self.name, '\t', self.hitpoints
@@ -71,6 +72,9 @@ class Ship(StarWarsActor):
 	def onUnTargeted(self, attacker):
 		if(attacker in self.attackers): 
 			self.attackers.remove(attacker)
+
+	def onTargetDestroyed(self):
+		self.weaponSystem.setTarget(None)
 
 	def getNumAttackers(self):
 		return self.attackers.length()

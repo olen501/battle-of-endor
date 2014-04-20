@@ -27,7 +27,7 @@ class test(ShowBase):
 		self.environ = self.loader.loadModel("models/world")
 
 		#Reparent the model to render
-		self.environ.reparentTo(self.render)
+		#self.environ.reparentTo(self.render)
 		#Apply scale and position transforms on the model
 
 		self.environ.setScale(1000, 1000, 1000)
@@ -47,12 +47,13 @@ class test(ShowBase):
 		slight.setLens(lens)
 
 		self.shipList = [
-			Xwing("xwing1")]#,
+			Xwing("xwing1"),
 			# Ywing("ywing1"),
-			# Awing("awing1"),
+			# Awing("awing1")#,
 			# Bwing("bwing1"),
 			# TieFighter("tiefighter1"),
-			# TieInterceptor("tieinterceptor1")]
+			# TieInterceptor("tieinterceptor1")
+		]
 
 		lightColors = [
 			Vec4(0.9, 0.9, 0.9, 1),
@@ -85,7 +86,7 @@ class test(ShowBase):
 
 			if self.count < 100:
 				#ship.weaponSystem.fireWeapon()
-			 	ship.goTo(Vec3(j*10,10,10))
+			 	#ship.goTo(Vec3(j*10,10,10))
 				if not self.fire:
 					ship.weaponSystem.fireWeapon()
 					self.fire = True
