@@ -64,7 +64,7 @@ class XwingWeapon(Weapon):
 		super(XwingWeapon, self).__init__(ship, name, weaponType, cooldown)
 		self.range = wrange
 
-		self.gunSelection = 0
+		self.gunSelection = 3
 
 		gunPos = [
 			Vec3(-2.5, 2, 1),
@@ -115,17 +115,51 @@ class AwingWeapon(Weapon):
 	def __init__(self, ship, name, weaponType, wrange, cooldown = 5):
 		super(AwingWeapon, self).__init__(ship, name, weaponType, cooldown)
 		self.range = wrange
-				
+
+		self.gunSelection = 0
+
+		gunPos = [
+			Vec3(2, 3, 0.5),
+			Vec3(-2, 3, 0.5)]
+
+		self.gunList = []
+		for pos in gunPos:
+			gun = self.parent.attachNewNode("dummyNode")
+			gun.setScale(0.1)
+			gun.setPos(pos)
+			gun.hide()
+			self.gunList.append(gun)
+
 	def fire(self, parent, target):
-		pass
+		self.gunSelection = (self.gunSelection + 1) % 2
+		laser = self.weaponType(parent, target, self.gunList[self.gunSelection], self.name + str(len(self.shotList)), self.range, self.removeShot)
+		self.shotList.append(laser)
+
 
 class BwingWeapon(Weapon):
 	def __init__(self, ship, name, weaponType, wrange, cooldown = 5):
 		super(BwingWeapon, self).__init__(ship, name, weaponType, cooldown)
 		self.range = wrange
-				
+
+		self.gunSelection = 0
+
+		gunPos = [
+			Vec3(3, 3, 0),
+			Vec3(-3, 3, 0),
+			Vec3(0, 3, -5.5)]
+
+		self.gunList = []
+		for pos in gunPos:
+			gun = self.parent.attachNewNode("dummyNode")
+			gun.setScale(0.1)
+			gun.setPos(pos)
+			gun.hide()
+			self.gunList.append(gun)
+
 	def fire(self, parent, target):
-		pass
+		self.gunSelection = (self.gunSelection + 1) % 3
+		laser = self.weaponType(parent, target, self.gunList[self.gunSelection], self.name + str(len(self.shotList)), self.range, self.removeShot)
+		self.shotList.append(laser)
 
 class TieFighterWeapon(Weapon):
 	def __init__(self, ship, name, weaponType, wrange, cooldown = 5):
@@ -164,12 +198,32 @@ class TieFighterWeapon(Weapon):
 
 
 class TieInterceptorWeapon(Weapon):
-	def __init__(self, name, weaponType, wrange, cooldown = 5):
-		super(TieInterceptorWeapon, self).__init__(name, weaponType, cooldown)
+	def __init__(self, ship, name, weaponType, wrange, cooldown = 5):
+		super(TieInterceptorWeapon, self).__init__(ship, name, weaponType, cooldown)
 		self.range = wrange
-				
+
+		self.gunSelection = 3
+
+		gunPos = [
+			Vec3(-2.0, 2, 1),
+			Vec3(2.0, 2, -1),
+			Vec3(-2.0, 2, -1),
+			Vec3(2.0, 2, 1)]
+
+		self.gunList = []
+		for pos in gunPos:
+			#gun = loader.loadModel("dummyName")
+			#gun.reparentTo(self.parent)
+			gun = self.parent.attachNewNode("dummyNode")
+			gun.setScale(0.1)
+			gun.setPos(pos)
+			gun.hide()
+			self.gunList.append(gun)
+
 	def fire(self, parent, target):
-		pass
+		self.gunSelection = (self.gunSelection + 1) % 4
+		laser = self.weaponType(parent, target, self.gunList[self.gunSelection], self.name + str(len(self.shotList)), self.range, self.removeShot)
+		self.shotList.append(laser)
 
 
 class Laser(StarWarsActor):

@@ -55,18 +55,21 @@ class WeaponSystem(object):
 		# XXX need to get the DT
 		dt = 0.5
 
+		# target = self.getTarget()
+		# print target
 		nextState = self.currentState
-		if(self.target is None or self.target.isDetached()):
+		if self.target is None:
 			self.target = self.aquireTarget()
+			#self.currentState = self.STATE_IDLE
 			nextState = self.STATE_IDLE	
 
-		if(self.currentState == self.STATE_IDLE):
+		if (self.currentState == self.STATE_IDLE):
 			if(self.target is not None):
 				self.setTarget(self.target)
 				self.activateDt = 0
 				nextState = self.STATE_ACTIVATE
 
-		if(self.currentState == self.STATE_ACTIVATE):
+		if (self.currentState == self.STATE_ACTIVATE):
 			if(self.activateDt > self.weaponActivate):
 				self.selectWeapon(self.target)
 				self.activateDt = 0
@@ -74,7 +77,7 @@ class WeaponSystem(object):
 			else:
 				self.activateDt += dt
 
-		if(self.currentState == self.STATE_READY):
+		if (self.currentState == self.STATE_READY):
 			
 			# New target assignment
 			# if((self.target is not None) and (self.target != self.target)):
@@ -93,7 +96,7 @@ class WeaponSystem(object):
 				self.cooldownDt = 0
 				nextState = self.STATE_COOLDOWN
 
-		if(self.currentState == self.STATE_COOLDOWN):
+		if (self.currentState == self.STATE_COOLDOWN):
 			if(self.cooldownDt > self.activeWeapon.getCooldown()):
 				self.cooldownDt = 0
 				nextState = self.STATE_READY
