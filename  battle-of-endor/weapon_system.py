@@ -58,18 +58,18 @@ class WeaponSystem(object):
 		# target = self.getTarget()
 		# print target
 		nextState = self.currentState
-		if self.target is None:
+		if self.target is None or self.target.isDetached():
 			self.target = self.aquireTarget()
 			#self.currentState = self.STATE_IDLE
 			nextState = self.STATE_IDLE	
 
-		if (self.currentState == self.STATE_IDLE):
+		elif (self.currentState == self.STATE_IDLE):
 			if(self.target is not None):
 				self.setTarget(self.target)
 				self.activateDt = 0
 				nextState = self.STATE_ACTIVATE
 
-		if (self.currentState == self.STATE_ACTIVATE):
+		elif (self.currentState == self.STATE_ACTIVATE):
 			if(self.activateDt > self.weaponActivate):
 				self.selectWeapon(self.target)
 				self.activateDt = 0
@@ -77,7 +77,7 @@ class WeaponSystem(object):
 			else:
 				self.activateDt += dt
 
-		if (self.currentState == self.STATE_READY):
+		elif (self.currentState == self.STATE_READY):
 			
 			# New target assignment
 			# if((self.target is not None) and (self.target != self.target)):
@@ -96,7 +96,7 @@ class WeaponSystem(object):
 				self.cooldownDt = 0
 				nextState = self.STATE_COOLDOWN
 
-		if (self.currentState == self.STATE_COOLDOWN):
+		elif (self.currentState == self.STATE_COOLDOWN):
 			if(self.cooldownDt > self.activeWeapon.getCooldown()):
 				self.cooldownDt = 0
 				nextState = self.STATE_READY
@@ -139,6 +139,7 @@ class WeaponSystem(object):
 	# Returns the distance from the weapon system's ship to the target's ship.
 	# This may want to be moved to static utility class.
 	def getDistanceToTarget(self, target):
+		print 'self:', self.ship, 'target:', target
 		return Vec3(self.ship.getPos()-target.getPos()).length()
 
 	# Prototype for firing a message
@@ -148,11 +149,17 @@ class WeaponSystem(object):
 	def isGoodShot(self):
 		localTargetPos = self.ship.coordinateTransform(self.target.getPos())
 
+		vel = self.ship.getVelocity()
+		
 		# difference in heading
-		dh = self.ship.navSystem.getAngle(Vec2(0, 1), Vec2(localTargetPos.getX(), localTargetPos.getY()))
+		dh = self.ship.navSystem.getAngle(Vec2(vel.getX(), vel.getY()), 
+			Vec2(localTargetPos.getX(), localTargetPos.getY()))
 
 		# difference in pitch
-		dp = self.ship.navSystem.getAngle(Vec2(0, 1), Vec2(localTargetPos.getZ(), localTargetPos.getY()))
+		dp = self.ship.navSystem.getAngle(Vec2(0, vel.getZ()), 
+			Vec2(localTargetPos.getZ(), localTargetPos.getY()))
+
+		print self.ship.name, dh, dp
 
 		if ((dh < 10) and (dh > -10)) and ((dp < 10) and (dp > -10)):
 			return True

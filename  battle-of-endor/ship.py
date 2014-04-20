@@ -47,6 +47,9 @@ class Ship(StarWarsActor):
 
 		self.weaponSystem.update(task)
 
+		if(len(self.nearBySwActors) > 0):
+			self.navSystem.pursue(self.nearBySwActors[0])
+
 		return Task.cont
 
 

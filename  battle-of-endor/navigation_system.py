@@ -35,6 +35,8 @@ class NavigationSystem(object):
 
 		self.turningRadius = 0.1
 
+		self.test_noMove_yesTurn = False
+
 	#-------------------------------------------------------------------------#
 	def flyInCircle(self):
 		theta = self.i / ((2*pi)) % (4*pi);
@@ -115,8 +117,11 @@ class NavigationSystem(object):
 		velF = self.velFilter.filter(finalVel * max(1,min(4, newVel.length())))
 		self.velocity = velF 
 
-		self.updatePosition()
-		self.updateHeading()
+		if(self.test_noMove_yesTurn == True):
+			self.updateHeading()
+		else:
+			self.updatePosition()
+			self.updateHeading()
 
 	#-------------------------------------------------------------------------#
 	def getAngle(self, v1, v2):
@@ -258,3 +263,6 @@ class NavigationSystem(object):
 	#-------------------------------------------------------------------------#
 	def getHpr(self):
 		return self.hpr
+
+	def setTest_noMove_yesTurn(self, val):
+		self.test_noMove_yesTurn = val
