@@ -138,3 +138,7 @@ class StarWarsActor(Actor):
 		self.navSystem.setTurningRadius(r)
 	def getTurningRadius(self):
 		return self.navSystem.getTurningRadius()
+
+
+	def isDetached(self):
+		return self.detached

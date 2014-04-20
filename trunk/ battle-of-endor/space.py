@@ -9,6 +9,7 @@ class Space():
 		self.c_size = c_size
 		self.c_dim = c_dim
 		self.Space = []
+		self.numObjects = 0
 
 		self.cellsWithChanges = []
 
@@ -34,6 +35,8 @@ class Space():
    			oz = int(oldLoc.getZ())
 			self.Space[ox][oy][oz].removeActor(stwa)
 			self.cellsWithChanges.append(oldLoc)
+		else:
+			self.numObjects += 1
 
 		self.Space[nx][ny][nz].addActor(stwa)
 		self.cellsWithChanges.append(newLoc)
@@ -45,6 +48,8 @@ class Space():
 
    		self.Space[x][y][z].removeActor(stwa)
    		self.cellsWithChanges.append(loc)
+
+   		self.numObjects -= 1
 
 
 	def getNeighbors(self,gridLoc):
@@ -98,6 +103,9 @@ class Space():
 
 	def getC_dim(self):
 		return self.c_dim
+
+	def getNumObjects(self):
+		return self.numObjects
 
 space = Space(500, 20)
 

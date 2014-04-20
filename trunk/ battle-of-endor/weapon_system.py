@@ -55,14 +55,9 @@ class WeaponSystem(object):
 		# XXX need to get the DT
 		dt = 0.5
 
-		# target = self.getTarget()
-		# print target
-
 		nextState = self.currentState
-		if self.target is None:
-
+		if(self.target is None or self.target.isDetached()):
 			self.target = self.aquireTarget()
-			# self.currentState = self.STATE_IDLE
 			nextState = self.STATE_IDLE	
 
 		if(self.currentState == self.STATE_IDLE):
