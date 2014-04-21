@@ -41,9 +41,9 @@ class test(ShowBase):
 			# Awing('awing1'),
 			# Bwing('bwing1'),
 			# Ywing("ywing1"),
-			
-			TieInterceptor("interceptor1"),
-			Xwing('xwing1')
+			Xwing('xwing1'),
+			TieInterceptor("interceptor1")#,
+			#Xwing('xwing1')
 		]
 
 		# xwing = Xwing("xwing1")
@@ -61,8 +61,8 @@ class test(ShowBase):
 			ship.setLight(alNP)
 
 
-		base.camera.setPos(self.shipList[1].getPos()+Vec3(0,50,0))
-		base.camera.lookAt(self.shipList[0].getPos())
+		base.camera.setPos(0,1000,0)
+		base.camera.lookAt(0, 0, 0)
 		taskMgr.add(self.clearSpaceFlag, 'clearFlags')
 
 	def clearSpaceFlag(self, task):

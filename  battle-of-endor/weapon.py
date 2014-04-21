@@ -333,7 +333,7 @@ class GreenLaserLong(Laser):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 5
-		speed = 70
+		speed = 400
 		super(GreenLaserLong, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
 	################## Take all of this out, this is just so I could see the laser during testing!!! ################
@@ -350,7 +350,7 @@ class GreenLaserShort(Laser):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 10
-		speed = 70
+		speed = 400
 		super(GreenLaserShort, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
 	################## Take all of this out, this is just so I could see the laser during testing!!! ################
