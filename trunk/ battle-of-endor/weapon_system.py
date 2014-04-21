@@ -161,7 +161,7 @@ class WeaponSystem(object):
 
 		print self.ship.name, dh, dp
 
-		if ((dh < 10) and (dh > -10)) and ((dp < 10) and (dp > -10)):
+		if ((dh < 30) and (dh > -30)) and ((dp < 30) and (dp > -30)):
 			return True
 		else:
 			return False
@@ -210,7 +210,7 @@ class TieFighterWeaponSystem(WeaponSystem):
 
 class TieInterceptorWeaponSystem(WeaponSystem):
 	def __init__(self, ship):
-		weaponClose = TieInterceptorWeapon(ship, ship.getName() + '-wClose', GreenLaserShort, 50)
-		weaponLong = TieInterceptorWeapon(ship, ship.getName() + '-wLong', GreenLaserLong, 100)
+		weaponClose = TieInterceptorWeapon(ship, ship.getName() + '-wClose', GreenLaserShort, 200)
+		weaponLong = TieInterceptorWeapon(ship, ship.getName() + '-wLong', GreenLaserLong, 1000)
 		super(TieInterceptorWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
 
