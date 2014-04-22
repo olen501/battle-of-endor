@@ -55,21 +55,18 @@ class WeaponSystem(object):
 		# XXX need to get the DT
 		dt = 0.5
 
-		# target = self.getTarget()
-		# print target
 		nextState = self.currentState
-		if self.target is None or self.target.isDetached():
+		if(self.target is None or self.target.isDetached()):
 			self.target = self.aquireTarget()
-			#self.currentState = self.STATE_IDLE
 			nextState = self.STATE_IDLE	
 
-		elif (self.currentState == self.STATE_IDLE):
+		if(self.currentState == self.STATE_IDLE):
 			if(self.target is not None):
 				self.setTarget(self.target)
 				self.activateDt = 0
 				nextState = self.STATE_ACTIVATE
 
-		elif (self.currentState == self.STATE_ACTIVATE):
+		if(self.currentState == self.STATE_ACTIVATE):
 			if(self.activateDt > self.weaponActivate):
 				self.selectWeapon(self.target)
 				self.activateDt = 0
@@ -77,7 +74,7 @@ class WeaponSystem(object):
 			else:
 				self.activateDt += dt
 
-		elif (self.currentState == self.STATE_READY):
+		if(self.currentState == self.STATE_READY):
 			
 			# New target assignment
 			# if((self.target is not None) and (self.target != self.target)):
@@ -96,7 +93,7 @@ class WeaponSystem(object):
 				self.cooldownDt = 0
 				nextState = self.STATE_COOLDOWN
 
-		elif (self.currentState == self.STATE_COOLDOWN):
+		if(self.currentState == self.STATE_COOLDOWN):
 			if(self.cooldownDt > self.activeWeapon.getCooldown()):
 				self.cooldownDt = 0
 				nextState = self.STATE_READY
@@ -139,7 +136,9 @@ class WeaponSystem(object):
 	# Returns the distance from the weapon system's ship to the target's ship.
 	# This may want to be moved to static utility class.
 	def getDistanceToTarget(self, target):
-		print 'self:', self.ship, 'target:', target
+		if(self.ship is None or target is None):
+			return 10000
+
 		return Vec3(self.ship.getPos()-target.getPos()).length()
 
 	# Prototype for firing a message
@@ -147,21 +146,24 @@ class WeaponSystem(object):
 		self.activeWeapon.fire(self.ship, self.target)
 
 	def isGoodShot(self):
-		localTargetPos = self.ship.coordinateTransform(self.target.getPos())
+		if(self.target is None):
+			return False
 
-		vel = self.ship.getVelocity()
-		
+		localTargetPos = self.ship.coordinateTransform(self.target.getPos())
 		# difference in heading
+		vel = self.ship.getVelocity()
+
 		dh = self.ship.navSystem.getAngle(Vec2(vel.getX(), vel.getY()), 
 			Vec2(localTargetPos.getX(), localTargetPos.getY()))
 
 		# difference in pitch
-		dp = self.ship.navSystem.getAngle(Vec2(0, vel.getZ()), 
-			Vec2(localTargetPos.getZ(), localTargetPos.getY()))
+		dp = self.ship.navSystem.getAngle(Vec2(vel.getX(), vel.getZ()), 
+			Vec2(localTargetPos.getX(), localTargetPos.getZ()))
 
-		print self.ship.name, dh, dp
+		print self.ship.name, '\t', dh, '\t', dp
 
-		if ((dh < 30) and (dh > -30)) and ((dp < 30) and (dp > -30)):
+		thres = 30
+		if ((dh < thres) and (dh > -thres)) and ((dp < thres) and (dp > -thres)):
 			return True
 		else:
 			return False
@@ -175,36 +177,36 @@ class WeaponSystem(object):
 
 class XwingWeaponSystem(WeaponSystem):
 	def __init__(self, ship):
-		weaponClose = XwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort, 50)
-		weaponLong = XwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong, 100)
+		weaponClose = XwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort, 200)
+		weaponLong = XwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong, 1000)
 		super(XwingWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
 
 
 class YwingWeaponSystem(WeaponSystem):
 	def __init__(self, ship):
-		weaponClose = YwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort, 50)
-		weaponLong = YwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong, 100)
+		weaponClose = YwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort, 200)
+		weaponLong = YwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong, 1000)
 		super(YwingWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
 
 
 class AwingWeaponSystem(WeaponSystem):
 	def __init__(self, ship):
-		weaponClose = AwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort, 50)
-		weaponLong = AwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong, 100)
+		weaponClose = AwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort, 200)
+		weaponLong = AwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong, 1000)
 		super(AwingWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
 
 
 class BwingWeaponSystem(WeaponSystem):
 	def __init__(self, ship):
-		weaponClose = BwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort, 50)
-		weaponLong = BwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong, 100)
+		weaponClose = BwingWeapon(ship, ship.getName() + '-wClose', RedLaserShort, 200)
+		weaponLong = BwingWeapon(ship, ship.getName() + '-wLong', RedLaserLong, 1000)
 		super(BwingWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
 
 
 class TieFighterWeaponSystem(WeaponSystem):
 	def __init__(self, ship):
-		weaponClose = TieFighterWeapon(ship, ship.getName() + '-wClose', GreenLaserShort, 50)
-		weaponLong = TieFighterWeapon(ship, ship.getName() + '-wLong', GreenLaserLong, 100)
+		weaponClose = TieFighterWeapon(ship, ship.getName() + '-wClose', GreenLaserShort, 200)
+		weaponLong = TieFighterWeapon(ship, ship.getName() + '-wLong', GreenLaserLong, 1000)
 		super(TieFighterWeaponSystem, self).__init__(ship, weaponClose, weaponLong)
 
 

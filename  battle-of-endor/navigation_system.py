@@ -218,7 +218,7 @@ class NavigationSystem(object):
 
 	#-------------------------------------------------------------------------#
 	def pursue(self, target):
-		self.goToLocation(target.getPos()-target.getVelocity()*3)
+		self.goToLocation(target.getPos()-target.getVelocity()*2)
 
 	#-------------------------------------------------------------------------#
 	def avoidAread(self, Vec3, r):
