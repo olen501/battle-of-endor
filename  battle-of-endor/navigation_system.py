@@ -220,6 +220,71 @@ class NavigationSystem(object):
 	def pursue(self, target):
 		self.goToLocation(target.getPos()-target.getVelocity()*2)
 
+	def TryToCollide(self, target):
+		self.goToLocation(target.getPos())
+
+	def EasyAI(self):
+		EnemyCount = 0
+		AlliesCount = 0
+		
+		for actor in self.swActor.nearBySwActorsAll:
+			if (actor.type == 'ship'):
+				if (actor.team != self.swActor.team):
+					EnemyCount = EnemyCount + 1
+				else:
+					AlliesCount = AlliesCount + 1
+		
+		attacker = self.swActor.attackers;
+
+		if (EnemyCount > AlliesCount * 10):
+			targetship = self.swActor.getClosetEnemyShip()
+			self.TryToCollide(targetship)
+			self.swActor.setTarget(targetship)
+		else:
+			if (EnemyCount > AlliesCount * 3):
+				if (attacker): #attacker is detected
+					self.swActor.setTarget(attacker[0])
+					self.evade(attacker[0])
+				else:
+					nearAllies = self.swActor.getClosetAlliesShip()
+					self.swActor.setTarget(nearAllies.target)
+					self.pursue(self.swActor.target)
+					
+			else:
+				if (EnemyCount > AlliesCount):
+					if (attacker): #attacker is detected
+						#attacker = self.getAttacker()
+						CloseEnemyShip = self.swActor.getClosetEnemyShip()
+						self.swActor.setTarget(CloseEnemyShip)
+						self.evade (attacker[0])
+					else:
+						nearAllies = self.swActor.getClosetAlliesShip()
+						self.swActor.setTarget(nearAllies.target)
+						self.pursue(self.swActor.target)
+				else:
+					if (EnemyCount * 3 > AlliesCount):
+						if (attacker): #attacker is detected
+							#attacker = self.getAttacker()
+							self.swActor.setTarget(attacker[0])
+							self.evade(attacker[0])
+						else:
+							CloseEnemy = self.swActor.getClosetEnemyShip()
+							self.swActor.setTarget(CloseEnemy)
+							self.pursue(CloseEnemy)
+					else:
+						if (attacker): #attacker is detected
+							if (self.swActor.hitpoints / self.swActor.totalhitpoints < 0.5):
+								#attacker = self.getAttacker()
+								deltapos = self.swActor.getPos() - attacker[0].pos()
+								self.goToLocation(self.swActor.getPos() + deltapos)
+							else:
+								self.swActor.setTarget(attacker[0])
+								self.evade(attacker[0])
+						else:
+							CloseEnemy = self.swActor.getClosetEnemyShip()
+							self.swActor.setTarget = CloseEnemy
+							self.pursue(CloseEnemy)
+
 	#-------------------------------------------------------------------------#
 	def avoidAread(self, Vec3, r):
 		pass
