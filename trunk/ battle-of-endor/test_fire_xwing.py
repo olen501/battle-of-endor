@@ -10,6 +10,7 @@ from central_controller import CentralController
 from ship import *
 from weapon import *
 from space import space
+from filter import LpfVec3
 
 class test(ShowBase):
 	def __init__(self):
@@ -36,29 +37,32 @@ class test(ShowBase):
 		render.setLight(plNP)
 
 
-
 		xwing = Xwing("xwing1")
 		tie = TieFighter("tie1")
+		awing = Awing('awing1')
 
-		self.shipList = [xwing, tie]
+		self.shipList = [xwing, tie, awing]
 		
 		# xwing.weaponSystem.fireWeapon()
 
 		for i, ship in enumerate(self.shipList):
 			ship.reparentTo(render)
 			ship.setScale(2)
-			ship.setPos(Point3(i*0,i*50,i*0))
+			ship.setPos(Point3(i*0,i*400,i*0))
 			# ship.setLight(dlNP)
 			ship.setLight(alNP)
 
-		base.camera.setPos(tie.getPos()+Vec3(20,50,0))
+		base.camera.setPos(tie.getPos()+Vec3(20,400,0))
 		base.camera.lookAt(xwing.getPos())
 		taskMgr.add(self.clearSpaceFlag, 'clearFlags')
+
+		self.camFilter = LpfVec3(Vec3(0,0,0),10)
 
 	def clearSpaceFlag(self, task):
 		space.clearFlag()
 		# space.printSpace() # WARNING THIS WILL CAUSE THINGS TO LOCK UP
-		pass
+		base.camera.lookAt(Point3(self.camFilter.filter(self.shipList[0])))
+		return Task.cont
 
 
 t = test()
