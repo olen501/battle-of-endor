@@ -32,21 +32,125 @@ class Ship(StarWarsActor):
 
 		self.weaponSystem = weaponSystem(self)
 		# self.commandSystem = CommandSystem()
-
+		self.totalhitpoints = hitpoints
 		self.hitpoints = hitpoints
 		self.shields = shields
 		self.commandLevel = commandLevel
 		self.t = 0
 		self.type = 'ship'
 		self.target = None
+		self.attackers = []
+
+	def distance_From_Me(self, swActor):
+		return (swActor.getPos() - self.getPos()).length()
+
+	def getClosetEnemyShip(self):
+		enemy = []
+		for actor in self.nearBySwActorsAll:
+			if (actor.type == 'ship'):
+				if (actor.team != self.team):
+					enemy.append(actor)
+		tmp = [(self.distance_From_Me(actor),actor) for actor in enemy]
+		(dist, neastneighbor) = min(tmp)
+		return neastneighbor
+
+	def getClosetAlliesShip(self):
+		enemy = []
+		for actor in self.nearBySwActorsAll:
+			if (actor.type == 'ship'):
+				if (actor.team == self.team):
+					enemy.append(actor)
+		tmp = [(self.distance_From_Me(actor),actor) for actor in enemy]
+		(dist, neastneighbor) = min(tmp)
+		return neastneighbor
+
+	def setTarget(self, swactorrr):
+		if (self.target != None):
+			if (self in self.target.attackers):
+				self.target.attackers.remove(self)
+		if (self in swactorrr.attackers):
+			pass
+		else:
+			swactorrr.attackers.append(self)
+		self.target = swactorrr
+		self.weaponSystem.target = swactorrr
+		self.weaponSystem.update(None)
+
+	def EasyAI(self):
+		EnemyCount = 0
+		AlliesCount = 0
+		
+		for actor in self.nearBySwActorsAll:
+			if (actor.type == 'ship'):
+				if (actor.team != self.team):
+					EnemyCount = EnemyCount + 1
+				else:
+					AlliesCount = AlliesCount + 1
+		
+		attacker = self.attackers;
+
+		print self.hitpoints / self.totalhitpoints
+
+		if (EnemyCount > AlliesCount * 10):
+			print 1
+			targetship = self.getClosetEnemyShip()
+			self.setTarget(targetship)
+			self.navSystem.TryToCollide(targetship)
+		else:
+			if (EnemyCount > AlliesCount * 3):
+				print 2
+				if (attacker): #attacker is detected
+					self.setTarget(attacker[0])
+					self.navSystem.evade(attacker[0])
+				else:
+					nearAllies = self.getClosetAlliesShip()
+					self.setTarget(nearAllies.target)
+					self.navSystem.pursue(self.swActor.target)
+					
+			else:
+				if (EnemyCount > AlliesCount):
+					print 3
+					if (attacker): #attacker is detected
+						#attacker = self.getAttacker()
+						CloseEnemyShip = self.getClosetEnemyShip()
+						self.setTarget(CloseEnemyShip)
+						self.navSystem.pursue (attacker[0])
+					else:
+						nearAllies = self.getClosetAlliesShip()
+						self.setTarget(nearAllies.target)
+						self.navSystem.pursue(self.swActor.target)
+				else:
+					if (EnemyCount * 3 > AlliesCount):
+						print 4
+						if (attacker): #attacker is detected
+							#attacker = self.getAttacker()
+							self.setTarget(attacker[0])
+							self.navSystem.pursue(attacker[0])
+						else:
+							CloseEnemy = self.getClosetEnemyShip()
+							self.setTarget(CloseEnemy)
+							self.navSystem.pursue(CloseEnemy)
+					else:
+						print 5
+						if (attacker): #attacker is detected
+							if (self.hitpoints / self.totalhitpoints < 0.5):
+								#attacker = self.getAttacker()
+								deltapos = self.getPos() - attacker[0].pos()
+								self.setTarget(self.Target)
+								self.navSystem.goToLocation(self.getPos() + deltapos)
+							else:
+								self.setTarget(attacker[0])
+								self.navSystem.pursue(attacker[0])
+						else:
+							CloseEnemy = self.getClosetEnemyShip()
+							self.setTarget = CloseEnemy
+							self.navSystem.pursue(CloseEnemy)
 
 	def update(self, task):
 		super(Ship, self).update(task)
 
 		self.weaponSystem.update(task)
-
-		if(len(self.nearBySwActors) > 0):
-			self.navSystem.pursue(self.nearBySwActors[0])
+		self.EasyAI()
 
 		return Task.cont
 

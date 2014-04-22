@@ -221,6 +221,10 @@ class NavigationSystem(object):
 		self.goToLocation(target.getPos()-target.getVelocity()*3)
 
 	#-------------------------------------------------------------------------#
+	def TryToCollide(self, target):
+		self.goToLocation(target.getPos())
+
+	#-------------------------------------------------------------------------#
 	def avoidAread(self, Vec3, r):
 		pass
 	
