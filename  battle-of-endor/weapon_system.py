@@ -77,7 +77,7 @@ class WeaponSystem(object):
 			
 			# New target assignment
 			# if((self.target is not None) and (self.target != self.target)):
-				# self.setTarget(target)				
+				# self.(target)				
 			
 			# Check if we need to change weapons
 			lastActWeap = self.activeWeapon
@@ -112,9 +112,6 @@ class WeaponSystem(object):
 		return None
 
 	# Weapon system setting a specific ship as its target
-	def setTarget(self, target):
-		self.targetSet = True
-		self.target = target
 	def getTarget(self):
 		return self.target
 
