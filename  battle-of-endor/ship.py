@@ -149,7 +149,7 @@ class Ship(StarWarsActor):
 	def update(self, task):
 		super(Ship, self).update(task)
 
-		self.weaponSystem.update(task)
+		#self.weaponSystem.update(task)
 		self.EasyAI()
 
 		return Task.cont
