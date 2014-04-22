@@ -40,8 +40,6 @@ class Ship(StarWarsActor):
 		self.type = 'ship'
 		self.target = None
 
-		
-
 	def update(self, task):
 		super(Ship, self).update(task)	
 
@@ -51,6 +49,14 @@ class Ship(StarWarsActor):
 			self.navSystem.pursue(self.nearBySwActors[0])
 
 		return Task.cont
+
+	def distance_From_Me(self, swActor):
+		return (swActor.getPos() - self.getPos()).length()
+
+	def getClosetEnemyShip(self):
+		tmp = [(distance_From_Me(actor),actor) for actor in self.nearBySwActorsAll]
+		(dist, neastneighbor) = min(tmp)
+
 
 
 	def goTo(self, loc):
@@ -68,6 +74,17 @@ class Ship(StarWarsActor):
 				self.weaponSystem.destroy()
 				self.destroy()
 		# print self.name, '\t', self.hitpoints
+
+	def setTarget(self, swactorrr):
+		if (self.target != None):
+			if (self in self.target.attackers):
+				self.target.attackers.remove(self)
+		if (self in swactorrr.attackers):
+			pass
+		else:
+			swactorrr.attackers.append(self)
+		self.target = swactorrr
+		self.weaponSystem.target = swActor
 
 	def onTargeted(self, attacker):
 		self.attackers.append(attacker)

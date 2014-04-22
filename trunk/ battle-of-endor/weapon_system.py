@@ -1,4 +1,4 @@
-# from ship import Ship
+from ship import *
 from weapon import *
 from panda3d.core import Vec3, Vec2
 
@@ -62,7 +62,6 @@ class WeaponSystem(object):
 
 		if(self.currentState == self.STATE_IDLE):
 			if(self.target is not None):
-				self.setTarget(self.target)
 				self.activateDt = 0
 				nextState = self.STATE_ACTIVATE
 
@@ -113,9 +112,9 @@ class WeaponSystem(object):
 		return None
 
 	# Weapon system setting a specific ship as its target
-	def setTarget(self, target):
-		self.targetSet = True
-		self.target = target
+	#def setTarget(self, target):
+	#	self.targetSet = True
+	#	self.target = target
 	def getTarget(self):
 		return self.target
 
