@@ -112,9 +112,9 @@ class WeaponSystem(object):
 		return None
 
 	# Weapon system setting a specific ship as its target
-	#def setTarget(self, target):
-	#	self.targetSet = True
-	#	self.target = target
+	def setTarget(self, target):
+		self.targetSet = True
+		self.target = target
 	def getTarget(self):
 		return self.target
 
@@ -172,7 +172,6 @@ class WeaponSystem(object):
 			gun.detachNode()
 		for gun in self.weaponLongRange.gunList:
 			gun.detachNode()
-
 
 class XwingWeaponSystem(WeaponSystem):
 	def __init__(self, ship):
