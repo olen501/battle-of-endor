@@ -299,7 +299,7 @@ class RedLaserLong(Laser):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 5
-		speed = 70
+		speed = 400
 		super(RedLaserLong, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
 	################## Take all of this out, this is just so I could see the laser during testing!!! ################
@@ -316,7 +316,7 @@ class RedLaserShort(Laser):
 		model = "models/beam"
 		timestep = 0.3
 		damage = 10
-		speed = 70
+		speed = 400
 		super(RedLaserShort, self).__init__(model, timestep, parent, target, gun, name, damage, wrange, speed, callback)
 
 	################## Take all of this out, this is just so I could see the laser during testing!!! ################
