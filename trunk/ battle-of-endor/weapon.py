@@ -255,11 +255,11 @@ class Laser(StarWarsActor):
 
 		#need to set velocity and heading
 		#self.setHeading(self.parent.getHeading())
-		initialVelocity_n = Vec3(self.parent.getVelocity())
+		initialVelocity_n = Vec3(self.parent.getVelocity() + self.target.getVelocity()*2)
 		initialVelocity_n.normalize()
 		self.setVelocity((initialVelocity_n * self.speed) + self.parent.getVelocity())
 
-		self.setHpr(self.navSystem.getDirection(self.parent.getVelocity()))
+		self.setHpr(self.navSystem.getDirection(self.parent.getVelocity()+self.target.getVelocity()*3))
 
 	def remove(self):
 		taskMgr.remove(self.task)
