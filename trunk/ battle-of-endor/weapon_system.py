@@ -55,9 +55,12 @@ class WeaponSystem(object):
 		# XXX need to get the DT
 		dt = 0.5
 
+		# if self.ship.team == 1:
+			# print self.target
+
 		nextState = self.currentState
 		if(self.target is None or self.target.isDetached()):
-			self.target = self.aquireTarget()
+			# self.target = self.aquireTarget()
 			nextState = self.STATE_IDLE	
 
 		if(self.currentState == self.STATE_IDLE):
@@ -105,7 +108,9 @@ class WeaponSystem(object):
 
 	# Prototype method - ultimately how the weapon system selects a target	
 	def aquireTarget(self):
+		# print 'aquiring target'
 		for nearByShip in self.ship.nearBySwActors:
+			# print nearByShip
 			if self.ship.team != nearByShip.team:
 				if self.getDistanceToTarget(nearByShip) <= self.weaponLongRange.getRange():
 					return nearByShip

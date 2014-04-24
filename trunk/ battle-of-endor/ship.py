@@ -18,7 +18,6 @@ from star_wars_actor import StarWarsActor
 from weapon_system import *
 from navigation_system import NavigationSystem
 
-from space import space
 # import direct.directbase.DirectStart
 
 
@@ -71,34 +70,33 @@ class Ship(StarWarsActor):
 		return neastneighbor
 
 	def setTarget(self, swactorrr):
-		if (self.target != None):
-			if (self in self.target.attackers):
-				self.target.attackers.remove(self)
-		if (swactorrr != None):
-			if (self in swactorrr.attackers):
-				pass
-			else:
-				swactorrr.attackers.append(self)
-		self.target = swactorrr
-		self.weaponSystem.target = swactorrr
-		self.weaponSystem.update(None)
+		if (self.target is None or self.target.isDetached()):
+			if(self.target is not None):
+				if (self in self.target.attackers):
+					self.target.attackers.remove(self)
+
+			if (swactorrr is not None):
+				if (self not in swactorrr.attackers):
+					# pass
+				# else:
+					swactorrr.attackers.append(self)
+			self.target = swactorrr
+			self.weaponSystem.setTarget(swactorrr)
+			# self.weaponSystem.update(None)
 
 	def EasyAI(self):
 		EnemyCount = 0
-		AlliesCount = 1 # One because you have yourself
+		AlliesCount = 0
 		
 		for actor in self.nearBySwActors:
-			if (actor.type == 'ship'):
-				if (actor.team != self.team):
-					EnemyCount = EnemyCount + 1
-				else:
-					AlliesCount = AlliesCount + 1
+			if (actor.team != self.team):
+				EnemyCount = EnemyCount + 1
+			else:
+				AlliesCount = AlliesCount + 1
 		
 		attacker = self.attackers;
 
 		# print self.hitpoints / self.totalhitpoints
-
-		# print EnemyCount, AlliesCount
 
 		if (EnemyCount > AlliesCount * 10):
 			# print 1
@@ -109,7 +107,7 @@ class Ship(StarWarsActor):
 			# print 2
 			if (attacker): #attacker is detected
 				self.setTarget(attacker[0])
-				self.navSystem.setEvade()#attacker[0])
+				self.navSystem.setEvade(attacker[0])
 			else:
 				nearAllies = self.getClosetAlliesShip()
 				self.setTarget(nearAllies.target)
@@ -139,7 +137,7 @@ class Ship(StarWarsActor):
 			if (attacker): #attacker is detected
 				if (self.hitpoints / self.totalhitpoints < 0.5):
 					#attacker = self.getAttacker()
-					deltapos = self.getPos() - attacker[0].getPos()
+					deltapos = self.getPos() - attacker[0].pos()
 					self.setTarget(self.Target)
 					self.navSystem.goToLocation(self.getPos() + deltapos)
 				else:
@@ -148,7 +146,7 @@ class Ship(StarWarsActor):
 			else:
 				CloseEnemy = self.getClosetEnemyShip()
 				self.setTarget(CloseEnemy)
-				self.navSystem.setPursue()#(self.target)
+				navSystem.setPursue()#(self.target)
 
 	def update(self, task):
 		super(Ship, self).update(task)
@@ -162,6 +160,8 @@ class Ship(StarWarsActor):
 		self.weaponSystem.update(task)
 		self.navSystem.update(task)
 
+
+		# print "brian line", self.name, self.weaponSystem.getTarget()
 
 
 		return Task.cont

@@ -53,6 +53,8 @@ class StarWarsActor(Actor):
 			if( dist < self.sight and swActor != self):
 				self.nearBySwActors.append(swActor)
 
+		# print self.name, self.nearBySwActors
+
 		self.checkCollision()
 		self.firstLoad = False
 
