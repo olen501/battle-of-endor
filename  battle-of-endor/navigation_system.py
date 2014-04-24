@@ -64,7 +64,7 @@ class NavigationSystem(object):
 		target = self.swActor.weaponSystem.getTarget()
 
 		if(target is not None):# and target.isDetached == False):
-			print 'here'
+			# print 'here'
 			if(self.currentState == self.STATE_PURSUE):
 				self.pursue(target)
 			elif(self.currentState == self.STATE_EVADE):
