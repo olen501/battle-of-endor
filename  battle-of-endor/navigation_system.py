@@ -236,8 +236,22 @@ class NavigationSystem(object):
 
 	#-------------------------------------------------------------------------#
 	def pursue(self, target):
-		if (target != None):
-			self.goToLocation(target.getPos()-target.getVelocity()*3)
+		dist = (self.position - target.getPos()).length()
+
+		velN = Vec3(self.velocity)
+		velN.normalize()
+
+		tVelN = Vec3(target.getVelocity())
+		tVelN.normalize()
+
+		velAng = velN.angleDeg(tVelN)
+		print velAng
+		# Ships are heading right at each other!
+		if(velAng > 160 and dist < self.velocity.length()*500):
+			dPos = target.getVelocity() - Vec3(100,0,0)
+			self.goToLocation(target.getPos() - dPos)
+		else:
+			self.goToLocation(target.getPos()-target.getVelocity()*2)
 
 	def setPursue(self):
 		self.currentState = self.STATE_PURSUE
