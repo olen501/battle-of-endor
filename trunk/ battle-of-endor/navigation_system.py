@@ -245,7 +245,7 @@ class NavigationSystem(object):
 		tVelN.normalize()
 
 		velAng = velN.angleDeg(tVelN)
-		print velAng
+		# print velAng
 		# Ships are heading right at each other!
 		if(velAng > 160 and dist < self.velocity.length()*500):
 			dPos = target.getVelocity() - Vec3(100,0,0)
