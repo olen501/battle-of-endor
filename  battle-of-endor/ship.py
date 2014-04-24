@@ -119,7 +119,7 @@ class Ship(StarWarsActor):
 			else:
 				nearAllies = self.getClosetAlliesShip()
 				self.setTarget(nearAllies.target)
-				self.navSystem.pursue(self.target)
+				self.navSystem.setPursue() #(self.target)
 		elif (EnemyCount * 3 > AlliesCount):
 			# print 4
 			if (attacker): #attacker is detected
