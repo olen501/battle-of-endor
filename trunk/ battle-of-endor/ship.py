@@ -18,6 +18,7 @@ from star_wars_actor import StarWarsActor
 from weapon_system import *
 from navigation_system import NavigationSystem
 
+from space import space
 # import direct.directbase.DirectStart
 
 
@@ -52,7 +53,9 @@ class Ship(StarWarsActor):
 				if (actor.team != self.team):
 					enemy.append(actor)
 		tmp = [(self.distance_From_Me(actor),actor) for actor in enemy]
-		(dist, neastneighbor) = min(tmp)
+		neastneighbor = None
+		if(len(tmp) > 0):
+			(dist, neastneighbor) = min(tmp)
 		return neastneighbor
 
 	def getClosetAlliesShip(self):
@@ -62,7 +65,9 @@ class Ship(StarWarsActor):
 				if (actor.team == self.team):
 					enemy.append(actor)
 		tmp = [(self.distance_From_Me(actor),actor) for actor in enemy]
-		(dist, neastneighbor) = min(tmp)
+		neastneighbor = None
+		if(len(tmp) > 0):
+			(dist, neastneighbor) = min(tmp)
 		return neastneighbor
 
 	def setTarget(self, swactorrr):
@@ -104,7 +109,7 @@ class Ship(StarWarsActor):
 			# print 2
 			if (attacker): #attacker is detected
 				self.setTarget(attacker[0])
-				self.navSystem.setEvade(attacker[0])
+				self.navSystem.setEvade()#attacker[0])
 			else:
 				nearAllies = self.getClosetAlliesShip()
 				self.setTarget(nearAllies.target)
@@ -134,7 +139,7 @@ class Ship(StarWarsActor):
 			if (attacker): #attacker is detected
 				if (self.hitpoints / self.totalhitpoints < 0.5):
 					#attacker = self.getAttacker()
-					deltapos = self.getPos() - attacker[0].pos()
+					deltapos = self.getPos() - attacker[0].getPos()
 					self.setTarget(self.Target)
 					self.navSystem.goToLocation(self.getPos() + deltapos)
 				else:
@@ -143,7 +148,7 @@ class Ship(StarWarsActor):
 			else:
 				CloseEnemy = self.getClosetEnemyShip()
 				self.setTarget(CloseEnemy)
-				navSystem.setPursue()#(self.target)
+				self.navSystem.setPursue()#(self.target)
 
 	def update(self, task):
 		super(Ship, self).update(task)

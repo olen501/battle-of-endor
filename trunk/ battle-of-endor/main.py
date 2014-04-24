@@ -18,6 +18,7 @@ import cPickle, sys
 
 
 from ship import *
+from space import space
 
 class Environment(ShowBase):
 	def __init__(self):
@@ -27,8 +28,8 @@ class Environment(ShowBase):
 
 		base.disableMouse()
 		
-		base.camera.setPos(0, -300, 100)
-		base.camera.lookAt(0,0,0)
+		base.camera.setPos(500, 500, 2500)
+		base.camera.lookAt(500,500,0)
 
 		slight = Spotlight('slight')
 		slight.setColor(VBase4(1, 1, 1, 1))
@@ -36,17 +37,40 @@ class Environment(ShowBase):
 		slight.setLens(lens)
 
 		# create rebel ships
-		self.rebels = [Xwing('xwing' + str(x)) for x in xrange(100)]
-		self.rebels += [Ywing('ywing' + str(x)) for x in xrange(100)]
-		self.rebels += [Awing('awing' + str(x)) for x in xrange(100)]
-		self.rebels += [Bwing('bwing' + str(x)) for x in xrange(100)]
+		self.rebels = [Xwing('xwing' + str(x)) for x in xrange(10)]
+		self.rebels += [Ywing('ywing' + str(x)) for x in xrange(10)]
+		self.rebels += [Awing('awing' + str(x)) for x in xrange(10)]
+		self.rebels += [Bwing('bwing' + str(x)) for x in xrange(10)]
 
 		# create imperial ships
-		self.imperials = [TieFighter('tiefighter' + str(x)) for x in xrange(400)]
-		self.imperials += [TieInterceptor('tieinterceptor' + str(x)) for x in xrange(400)]
+		self.imperials = [TieFighter('tiefighter' + str(x)) for x in xrange(10)]
+		self.imperials += [TieInterceptor('tieinterceptor' + str(x)) for x in xrange(10)]
 
 
-	def test(self, task):
+		self.shipList = []
+
+		self.shipList += self.rebels
+		self.shipList += self.imperials
+
+		for i, ship in enumerate(self.shipList):
+			ship.reparentTo(render)
+			ship.setScale(2)
+			ship.setPos(Point3(random()*1000,
+							   random()*1000,
+							   random()*1000))
+
+			directionalLight = DirectionalLight('directionalLight')
+			directionalLightNP = render.attachNewNode(directionalLight)
+
+			directionalLightNP.setHpr(180, -20, 0)
+			ship.setLight(directionalLightNP)
+			# ship.navSystem.setPursue()
 
 
+	def gameLoop(self, task):
+
+		# print 
 		return Task.cont
+
+t = Environment()
+t.run()
