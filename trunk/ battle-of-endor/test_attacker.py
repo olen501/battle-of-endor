@@ -19,7 +19,7 @@ class test(ShowBase):
 
 		base.disableMouse()
 		
-		base.camera.setPos(0, -400, 500)
+		base.camera.setPos(0, -200, 2000)
 		base.camera.lookAt(0, 0, 0)
 
 		slight = Spotlight('slight')
@@ -28,11 +28,11 @@ class test(ShowBase):
 		slight.setLens(lens)
 
 		self.shipList = [
-			Xwing("xwing1"), TieFighter("tie1")]
+			Xwing("xwing1"), TieFighter("tie1"), Awing("xwing2")]
 
 		lightColors = [
 			Vec4(0.9, 0.9, 0.9, 1),
-			Vec4(0.9, 0.9, 0.9, 1)]
+			Vec4(0.9, 0.9, 0.9, 1),]
 
 		for i, ship in enumerate(self.shipList):
 			ship.reparentTo(render)
@@ -40,11 +40,12 @@ class test(ShowBase):
 			ship.setPos(Point3(i*-50,-i*200,i*50))
 
 			directionalLight = DirectionalLight('directionalLight')
-			directionalLight.setColor(lightColors[i])
+			# directionalLight.setColor(lightColors[i])
 			directionalLightNP = render.attachNewNode(directionalLight)
 
 			directionalLightNP.setHpr(180, -20, 0)
 			ship.setLight(directionalLightNP)
+			ship.navSystem.setPursue()
 
 			self.cc.addObject(ship)
 
@@ -58,7 +59,7 @@ class test(ShowBase):
 
 		dt = globalClock.getDt()
 
-
+		# base.camera.lookAt(Point3(self.shipList[1].getPos()))
 
 
 		return Task.cont

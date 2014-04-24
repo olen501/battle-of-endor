@@ -39,6 +39,8 @@ class Ship(StarWarsActor):
 		self.t = 0
 		self.type = 'ship'
 		self.target = None
+		self.attackers = []
+		self.totalhitpoints = hitpoints
 
 	def distance_From_Me(self, swActor):
 		return (swActor.getPos() - self.getPos()).length()
@@ -80,7 +82,7 @@ class Ship(StarWarsActor):
 		EnemyCount = 0
 		AlliesCount = 0
 		
-		for actor in self.nearBySwActorsAll:
+		for actor in self.nearBySwActors:
 			if (actor.type == 'ship'):
 				if (actor.team != self.team):
 					EnemyCount = EnemyCount + 1
@@ -89,16 +91,16 @@ class Ship(StarWarsActor):
 		
 		attacker = self.attackers;
 
-		print self.hitpoints / self.totalhitpoints
+		# print self.hitpoints / self.totalhitpoints
 
 		if (EnemyCount > AlliesCount * 10):
-			print 1
+			# print 1
 			targetship = self.getClosetEnemyShip()
 			self.setTarget(targetship)
-			self.navSystem.TryToCollide(targetship)
+			self.navSystem.pursue(targetship)
 		else:
 			if (EnemyCount > AlliesCount * 3):
-				print 2
+				# print 2
 				if (attacker): #attacker is detected
 					self.setTarget(attacker[0])
 					self.navSystem.evade(attacker[0])
@@ -109,7 +111,7 @@ class Ship(StarWarsActor):
 					
 			else:
 				if (EnemyCount > AlliesCount):
-					print 3
+					# print 3
 					if (attacker): #attacker is detected
 						#attacker = self.getAttacker()
 						CloseEnemyShip = self.getClosetEnemyShip()
@@ -121,7 +123,7 @@ class Ship(StarWarsActor):
 						self.navSystem.pursue(self.target)
 				else:
 					if (EnemyCount * 3 > AlliesCount):
-						print 4
+						# print 4
 						if (attacker): #attacker is detected
 							#attacker = self.getAttacker()
 							self.setTarget(attacker[0])
@@ -131,7 +133,7 @@ class Ship(StarWarsActor):
 							self.setTarget(CloseEnemy)
 							self.navSystem.pursue(self.target)
 					else:
-						print 5
+						# print 5
 						if (attacker): #attacker is detected
 							if (self.hitpoints / self.totalhitpoints < 0.5):
 								#attacker = self.getAttacker()
@@ -150,9 +152,14 @@ class Ship(StarWarsActor):
 		super(Ship, self).update(task)
 
 		self.weaponSystem.update(task)
+		self.navSystem.update(task)
 
-		if(len(self.nearBySwActors) > 0):
-			self.navSystem.pursue(self.nearBySwActors[0])
+		# if(len(self.nearBySwActors) > 0):
+		# 	self.navSystem.pursue(self.nearBySwActors[0])
+
+		# self.EasyAI()
+
+
 
 		return Task.cont
 

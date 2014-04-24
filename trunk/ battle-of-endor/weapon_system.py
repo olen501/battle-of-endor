@@ -159,7 +159,7 @@ class WeaponSystem(object):
 		dp = self.ship.navSystem.getAngle(Vec2(vel.getX(), vel.getZ()), 
 			Vec2(localTargetPos.getX(), localTargetPos.getZ()))
 
-		print self.ship.name, '\t', dh, '\t', dp
+		# print self.ship.name, '\t', dh, '\t', dp
 
 		thres = 30
 		if ((dh < thres) and (dh > -thres)) and ((dp < thres) and (dp > -thres)):

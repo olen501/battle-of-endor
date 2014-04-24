@@ -44,3 +44,9 @@ class Environment(ShowBase):
 		# create imperial ships
 		self.imperials = [TieFighter('tiefighter' + str(x)) for x in xrange(400)]
 		self.imperials += [TieInterceptor('tieinterceptor' + str(x)) for x in xrange(400)]
+
+
+	def test(self, task):
+
+
+		return Task.cont
