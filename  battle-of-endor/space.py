@@ -113,5 +113,5 @@ class Space():
 	def getNumObjects(self):
 		return self.numObjects
 
-space = Space(500, 20)
+space = Space(200, 20)
 
