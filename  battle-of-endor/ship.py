@@ -137,7 +137,7 @@ class Ship(StarWarsActor):
 				if (self.hitpoints / self.totalhitpoints < 0.5):
 					#attacker = self.getAttacker()
 					deltapos = self.getPos() - attacker[0].getPos()
-					self.setTarget(self.Target)
+					self.setTarget(self.target)
 					self.navSystem.goToLocation(self.getPos() + deltapos)
 				else:
 					self.setTarget(attacker[0])
