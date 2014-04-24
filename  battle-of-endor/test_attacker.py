@@ -28,7 +28,7 @@ class test(ShowBase):
 		slight.setLens(lens)
 
 		self.shipList = [
-			Xwing("xwing1"), TieFighter("tie1"), Awing("xwing2")]
+			Xwing("xwing1"), TieFighter("tie1"), Bwing("xwing2")]
 
 		lightColors = [
 			Vec4(0.9, 0.9, 0.9, 1),
@@ -37,10 +37,9 @@ class test(ShowBase):
 		for i, ship in enumerate(self.shipList):
 			ship.reparentTo(render)
 			ship.setScale(2)
-			ship.setPos(Point3(i*-50,-i*200,i*50))
+			ship.setPos(Point3(i*-50,-i*100,i*50))
 
 			directionalLight = DirectionalLight('directionalLight')
-			# directionalLight.setColor(lightColors[i])
 			directionalLightNP = render.attachNewNode(directionalLight)
 
 			directionalLightNP.setHpr(180, -20, 0)
