@@ -19,8 +19,8 @@ class test(ShowBase):
 
 		base.disableMouse()
 		
-		base.camera.setPos(1000, 500, 1000)
-		base.camera.lookAt(200, 200, 0)
+		base.camera.setPos(1000, 100, 4000)
+		base.camera.lookAt(200, 1000, 0)
 
 		slight = Spotlight('slight')
 		slight.setColor(VBase4(1, 1, 1, 1))
@@ -48,7 +48,7 @@ class test(ShowBase):
 
 		# add more imperial ships
 		#self.imperials += [TieFighter('tiefighter' + str(x) + 'second') for x in xrange(2)]
-		#self.imperials += [TieInterceptor('tieinterceptor' + str(x) + 'second') for x in xrange(2)]
+		self.imperials += [TieInterceptor('tieinterceptor' + str(x) + 'second') for x in xrange(1)]
 		
 		# create ship list
 		self.shipList = self.rebels + self.imperials
