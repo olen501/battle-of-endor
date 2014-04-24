@@ -37,6 +37,10 @@ class NavigationSystem(object):
 
 		self.test_noMove_yesTurn = False
 
+		self.STATE_PURSUE = 1
+		self.STATE_EVADE = 2
+		self.currentState = self.STATE_PURSUE
+
 	#-------------------------------------------------------------------------#
 	def flyInCircle(self):
 		theta = self.i / ((2*pi)) % (4*pi);
@@ -52,6 +56,20 @@ class NavigationSystem(object):
 		self.velocity = vel;
 		self.updatePosition()
 		self.updateHeading()
+
+
+
+	def update(self, task):
+
+		target = self.swActor.weaponSystem.getTarget()
+
+		if(target is not None):# and target.isDetached == False):
+			print 'here'
+			if(self.currentState == self.STATE_PURSUE):
+				self.pursue(target)
+			elif(self.currentState == self.STATE_EVADE):
+				self.evade(target)
+
 
 	#-------------------------------------------------------------------------#
 	def addWayPoint(self, point):
@@ -220,6 +238,13 @@ class NavigationSystem(object):
 	def pursue(self, target):
 		if (target != None):
 			self.goToLocation(target.getPos()-target.getVelocity()*3)
+
+	def setPursue(self):
+		self.currentState = self.STATE_PURSUE
+
+	def setEvade(self):
+		self.currentState = self.STATE_EVADE
+
 
 	#-------------------------------------------------------------------------#
 	def avoidAread(self, Vec3, r):
