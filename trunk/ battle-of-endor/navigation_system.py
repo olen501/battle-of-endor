@@ -69,6 +69,10 @@ class NavigationSystem(object):
 				self.pursue(target)
 			elif(self.currentState == self.STATE_EVADE):
 				self.evade(target)
+		else:
+			self.goToLocation(Vec3(0,0,0))
+			#self.updatePosition()
+			#self.updateHeading()
 
 
 	#-------------------------------------------------------------------------#

@@ -97,7 +97,6 @@ class Ship(StarWarsActor):
 		attacker = self.attackers;
 
 		# print self.hitpoints / self.totalhitpoints
-
 		if (EnemyCount > AlliesCount * 10):
 			# print 1
 			targetship = self.getClosetEnemyShip()
@@ -107,7 +106,7 @@ class Ship(StarWarsActor):
 			# print 2
 			if (attacker): #attacker is detected
 				self.setTarget(attacker[0])
-				self.navSystem.setEvade(attacker[0])
+				self.navSystem.setEvade()#attacker[0])
 			else:
 				nearAllies = self.getClosetAlliesShip()
 				self.setTarget(nearAllies.target)
@@ -137,7 +136,7 @@ class Ship(StarWarsActor):
 			if (attacker): #attacker is detected
 				if (self.hitpoints / self.totalhitpoints < 0.5):
 					#attacker = self.getAttacker()
-					deltapos = self.getPos() - attacker[0].pos()
+					deltapos = self.getPos() - attacker[0].getPos()
 					self.setTarget(self.Target)
 					self.navSystem.goToLocation(self.getPos() + deltapos)
 				else:
@@ -146,7 +145,7 @@ class Ship(StarWarsActor):
 			else:
 				CloseEnemy = self.getClosetEnemyShip()
 				self.setTarget(CloseEnemy)
-				navSystem.setPursue()#(self.target)
+				self.navSystem.setPursue()#(self.target)
 
 	def update(self, task):
 		super(Ship, self).update(task)

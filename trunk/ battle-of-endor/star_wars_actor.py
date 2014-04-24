@@ -30,7 +30,7 @@ class StarWarsActor(Actor):
 		self.new_neighbors = None
 		self.detached = False
 
-		self.sight = 1000
+		self.sight = 250
 		self.dt = 0
 		self.gridLoc = None
 
