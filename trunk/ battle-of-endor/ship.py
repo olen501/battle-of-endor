@@ -80,7 +80,7 @@ class Ship(StarWarsActor):
 
 	def EasyAI(self):
 		EnemyCount = 0
-		AlliesCount = 0
+		AlliesCount = 1 # One because you have yourself
 		
 		for actor in self.nearBySwActors:
 			if (actor.type == 'ship'):
@@ -93,71 +93,69 @@ class Ship(StarWarsActor):
 
 		# print self.hitpoints / self.totalhitpoints
 
+		# print EnemyCount, AlliesCount
+
 		if (EnemyCount > AlliesCount * 10):
 			# print 1
 			targetship = self.getClosetEnemyShip()
 			self.setTarget(targetship)
-			self.navSystem.pursue(targetship)
-		else:
-			if (EnemyCount > AlliesCount * 3):
-				# print 2
-				if (attacker): #attacker is detected
-					self.setTarget(attacker[0])
-					self.navSystem.evade(attacker[0])
-				else:
-					nearAllies = self.getClosetAlliesShip()
-					self.setTarget(nearAllies.target)
-					self.navSystem.pursue(self.target)
-					
+			self.navSystem.setPursue()#(targetship)
+		elif (EnemyCount > AlliesCount * 3):
+			# print 2
+			if (attacker): #attacker is detected
+				self.setTarget(attacker[0])
+				self.navSystem.evade(attacker[0])
 			else:
-				if (EnemyCount > AlliesCount):
-					# print 3
-					if (attacker): #attacker is detected
-						#attacker = self.getAttacker()
-						CloseEnemyShip = self.getClosetEnemyShip()
-						self.setTarget(CloseEnemyShip)
-						self.navSystem.pursue (attacker[0])
-					else:
-						nearAllies = self.getClosetAlliesShip()
-						self.setTarget(nearAllies.target)
-						self.navSystem.pursue(self.target)
+				nearAllies = self.getClosetAlliesShip()
+				self.setTarget(nearAllies.target)
+				self.navSystem.setPursue()#(self.target)					
+		elif (EnemyCount > AlliesCount):
+			# print 3
+			if (attacker): #attacker is detected
+				#attacker = self.getAttacker()
+				CloseEnemyShip = self.getClosetEnemyShip()
+				self.setTarget(CloseEnemyShip)
+				self.navSystem.setPursue()# (attacker[0])
+			else:
+				nearAllies = self.getClosetAlliesShip()
+				self.setTarget(nearAllies.target)
+				self.navSystem.pursue(self.target)
+		elif (EnemyCount * 3 > AlliesCount):
+			# print 4
+			if (attacker): #attacker is detected
+				#attacker = self.getAttacker()
+				self.setTarget(attacker[0])
+				self.navSystem.setPursue()#(attacker[0])
+			else:
+				CloseEnemy = self.getClosetEnemyShip()
+				self.setTarget(CloseEnemy)
+				self.navSystem.setPursue()#(self.target)
+		else:
+			if (attacker): #attacker is detected
+				if (self.hitpoints / self.totalhitpoints < 0.5):
+					#attacker = self.getAttacker()
+					deltapos = self.getPos() - attacker[0].pos()
+					self.setTarget(self.Target)
+					self.navSystem.goToLocation(self.getPos() + deltapos)
 				else:
-					if (EnemyCount * 3 > AlliesCount):
-						# print 4
-						if (attacker): #attacker is detected
-							#attacker = self.getAttacker()
-							self.setTarget(attacker[0])
-							self.navSystem.pursue(attacker[0])
-						else:
-							CloseEnemy = self.getClosetEnemyShip()
-							self.setTarget(CloseEnemy)
-							self.navSystem.pursue(self.target)
-					else:
-						# print 5
-						if (attacker): #attacker is detected
-							if (self.hitpoints / self.totalhitpoints < 0.5):
-								#attacker = self.getAttacker()
-								deltapos = self.getPos() - attacker[0].pos()
-								self.setTarget(self.Target)
-								self.navSystem.goToLocation(self.getPos() + deltapos)
-							else:
-								self.setTarget(attacker[0])
-								self.navSystem.pursue(attacker[0])
-						else:
-							CloseEnemy = self.getClosetEnemyShip()
-							self.setTarget(CloseEnemy)
-							navSystem.pursue(self.target)
+					self.setTarget(attacker[0])
+					self.navSystem.setPursue()#(attacker[0])
+			else:
+				CloseEnemy = self.getClosetEnemyShip()
+				self.setTarget(CloseEnemy)
+				navSystem.setPursue()#(self.target)
 
 	def update(self, task):
 		super(Ship, self).update(task)
 
-		self.weaponSystem.update(task)
-		self.navSystem.update(task)
+		# 
 
 		# if(len(self.nearBySwActors) > 0):
 		# 	self.navSystem.pursue(self.nearBySwActors[0])
 
-		# self.EasyAI()
+		self.EasyAI()
+		self.weaponSystem.update(task)
+		self.navSystem.update(task)
 
 
 
